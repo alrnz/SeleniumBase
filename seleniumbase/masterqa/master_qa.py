@@ -1,35 +1,38 @@
+"""Manually verify pages quickly while assisted by automation."""
 import os
 import shutil
 import sys
 import time
+from selenium.common.exceptions import NoAlertPresentException
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.remote.errorhandler import NoAlertPresentException
 from seleniumbase import BaseCase
-from seleniumbase.core.style_sheet import style
+from seleniumbase.core.style_sheet import get_report_style
 from seleniumbase.config import settings
 from seleniumbase.fixtures import js_utils
 
-# This tool allows testers to quickly verify pages while assisted by automation
-
 
 class MasterQA(BaseCase):
-
     def setUp(self):
         self.check_count = 0
         self.auto_close_results_page = False
-        super(MasterQA, self).setUp(masterqa_mode=True)
+        super().setUp(masterqa_mode=True)
         self.LATEST_REPORT_DIR = settings.LATEST_REPORT_DIR
         self.ARCHIVE_DIR = settings.REPORT_ARCHIVE_DIR
         self.RESULTS_PAGE = settings.HTML_REPORT
         self.BAD_PAGE_LOG = settings.RESULTS_TABLE
+        self.DEFAULT_VALIDATION_TITLE = "Manual Check"
         self.DEFAULT_VALIDATION_MESSAGE = (
-            settings.MASTERQA_DEFAULT_VALIDATION_MESSAGE)
+            settings.MASTERQA_DEFAULT_VALIDATION_MESSAGE
+        )
         self.WAIT_TIME_BEFORE_VERIFY = (
-            settings.MASTERQA_WAIT_TIME_BEFORE_VERIFY)
+            settings.MASTERQA_WAIT_TIME_BEFORE_VERIFY
+        )
         self.START_IN_FULL_SCREEN_MODE = (
-            settings.MASTERQA_START_IN_FULL_SCREEN_MODE)
+            settings.MASTERQA_START_IN_FULL_SCREEN_MODE
+        )
         self.MAX_IDLE_TIME_BEFORE_QUIT = (
-            settings.MASTERQA_MAX_IDLE_TIME_BEFORE_QUIT)
+            settings.MASTERQA_MAX_IDLE_TIME_BEFORE_QUIT
+        )
         self.__manual_check_setup()
         if self.headless:
             self.auto_close_results_page = True
@@ -47,19 +50,22 @@ class MasterQA(BaseCase):
         self.__manual_page_check(*args)
 
     def auto_close_results(self):
-        ''' If this method is called, the results page will automatically close
+        """If this method is called, the results page will automatically close
         at the end of the test run, rather than waiting on the user to close
         the results page manually.
-        '''
+        """
         self.auto_close_results_page = True
 
     def tearDown(self):
         if self.headless and self.check_count > 0:
-            print("WARNING: %s manual checks were skipped!" % self.check_count)
-        if sys.exc_info()[1]:
+            print(
+                "WARNING: %s manual checks were skipped! (MasterQA)"
+                % self.check_count
+            )
+        if self.__has_exception():
             self.__add_failure(sys.exc_info()[1])
         self.__process_manual_check_results(self.auto_close_results_page)
-        super(MasterQA, self).tearDown()
+        super().tearDown()
 
     ####################
 
@@ -74,40 +80,50 @@ class MasterQA(BaseCase):
         self.__clear_out_old_logs(archive_past_runs=False)
 
     def __clear_out_old_logs(
-            self, archive_past_runs=True, get_log_folder=False):
-        abs_path = os.path.abspath('.')
-        file_path = abs_path + "/%s" % self.LATEST_REPORT_DIR
+        self, archive_past_runs=True, get_log_folder=False
+    ):
+        abs_path = os.path.abspath(".")
+        file_path = os.path.join(abs_path, self.LATEST_REPORT_DIR)
         if not os.path.exists(file_path):
             os.makedirs(file_path)
 
         if archive_past_runs:
             archive_timestamp = int(time.time())
-            if not os.path.exists("%s/../%s/" % (file_path, self.ARCHIVE_DIR)):
-                os.makedirs("%s/../%s/" % (file_path, self.ARCHIVE_DIR))
-            archive_dir = "%s/../%s/log_%s" % (
-                file_path, self.ARCHIVE_DIR, archive_timestamp)
+            archive_dir_root = os.path.join(file_path, "..", self.ARCHIVE_DIR)
+            if not os.path.exists(archive_dir_root):
+                os.makedirs(archive_dir_root)
+            archive_dir = os.path.join(
+                archive_dir_root, "log_%s" % archive_timestamp
+            )
             shutil.move(file_path, archive_dir)
             os.makedirs(file_path)
             if get_log_folder:
                 return archive_dir
         else:
+            latest_report_local = os.path.join(".", self.LATEST_REPORT_DIR)
             # Just delete bad pages to make room for the latest run.
-            filelist = [f for f in os.listdir(
-                "./%s" % self.LATEST_REPORT_DIR) if (
-                f.startswith("failed_")) or (
-                f == self.RESULTS_PAGE) or (
-                f.startswith("automation_failure")) or (
-                f == self.BAD_PAGE_LOG)]
+            filelist = [
+                f
+                for f in os.listdir(latest_report_local)
+                if (f.startswith("failed_"))
+                or (f == self.RESULTS_PAGE)
+                or (f.startswith("automation_failure"))
+                or (f == self.BAD_PAGE_LOG)
+            ]
             for f in filelist:
-                os.remove("%s/%s" % (file_path, f))
+                os.remove(os.path.join(file_path, f))
 
     def __jq_confirm_dialog(self, question):
         count = self.manual_check_count + 1
-        title_content = ('<center><font color="#7700bb">Manual Check #%s:'
-                         '</font></center><hr><font color="#0066ff">%s</font>'
-                         '' % (count, question))
+        title = self.DEFAULT_VALIDATION_TITLE
+        title_content = (
+            '<center><font color="#7700bb">%s #%s:'
+            '</font></center><hr><font color="#0066ff">%s</font>'
+            "" % (title, count, question)
+        )
         title_content = js_utils.escape_quotes_if_needed(title_content)
-        jqcd = ("""jconfirm({
+        jqcd = (
+            """jconfirm({
                     boxWidth: '32.5%%',
                     useBootstrap: false,
                     containerFluid: false,
@@ -122,22 +138,28 @@ class MasterQA(BaseCase):
                     title: '%s',
                     content: '',
                     buttons: {
-                        fail_button: {
-                            btnClass: 'btn-red',
-                            text: 'NO / FAIL',
-                            action: function(){
-                                $jqc_status = "Failure!"
-                            }
-                        },
                         pass_button: {
                             btnClass: 'btn-green',
                             text: 'YES / PASS',
+                            keys: ['y', 'p', '1'],
                             action: function(){
-                                $jqc_status = "Success!"
+                                $jqc_status = "Success!";
+                                jconfirm.lastButtonText = "Success!";
+                            }
+                        },
+                        fail_button: {
+                            btnClass: 'btn-red',
+                            text: 'NO / FAIL',
+                            keys: ['n', 'f', '2'],
+                            action: function(){
+                                $jqc_status = "Failure!";
+                                jconfirm.lastButtonText = "Failure!";
                             }
                         }
                     }
-                });""" % title_content)
+                });"""
+            % title_content
+        )
         self.execute_script(jqcd)
 
     def __manual_page_check(self, *args):
@@ -169,7 +191,8 @@ class MasterQA(BaseCase):
             get_jqc = None
             try:
                 get_jqc = self.execute_script("return jconfirm")
-                get_jqc = get_jqc["instances"]
+                if get_jqc is None:
+                    raise Exception("jconfirm did not load")
                 use_jqc = True
             except Exception:
                 use_jqc = False
@@ -182,7 +205,8 @@ class MasterQA(BaseCase):
             while waiting_for_response:
                 time.sleep(0.05)
                 jqc_open = self.execute_script(
-                    "return jconfirm.instances.length")
+                    "return jconfirm.instances.length"
+                )
                 if str(jqc_open) == "0":
                     break
             time.sleep(0.1)
@@ -190,36 +214,39 @@ class MasterQA(BaseCase):
             try:
                 status = self.execute_script("return $jqc_status")
             except Exception:
-                status = "Failure!"
-                pre_status = self.execute_script(
-                    "return jconfirm.lastClicked.hasClass('btn-green')")
-                if pre_status:
-                    status = "Success!"
+                status = self.execute_script("return jconfirm.lastButtonText")
         else:
             # Fallback to plain js confirm dialogs if can't load jquery_confirm
-            if self.browser == 'ie':
+            if self.browser == "ie":
                 text = self.execute_script(
-                    '''if(confirm("%s")){return "Success!"}
-                    else{return "Failure!"}''' % question)
-            elif self.browser == 'chrome':
-                self.execute_script('''if(confirm("%s"))
+                    """if(confirm("%s")){return "Success!"}
+                    else{return "Failure!"}"""
+                    % question
+                )
+            elif self.browser == "chrome":
+                self.execute_script(
+                    """if(confirm("%s"))
                     {window.master_qa_result="Success!"}
-                    else{window.master_qa_result="Failure!"}''' % question)
+                    else{window.master_qa_result="Failure!"}"""
+                    % question
+                )
                 time.sleep(0.05)
                 self.__wait_for_special_alert_absent()
-                text = self.execute_script('return window.master_qa_result')
+                text = self.execute_script("return window.master_qa_result")
             else:
                 try:
                     self.execute_script(
-                        '''if(confirm("%s"))
+                        """if(confirm("%s"))
                         {window.master_qa_result="Success!"}
-                        else{window.master_qa_result="Failure!"}''' % question)
+                        else{window.master_qa_result="Failure!"}"""
+                        % question
+                    )
                 except WebDriverException:
                     # Fix for https://github.com/mozilla/geckodriver/issues/431
                     pass
                 time.sleep(0.05)
                 self.__wait_for_special_alert_absent()
-                text = self.execute_script('return window.master_qa_result')
+                text = self.execute_script("return window.master_qa_result")
             status = text
 
         self.manual_check_count += 1
@@ -230,7 +257,8 @@ class MasterQA(BaseCase):
         if "Success!" in str(status):
             self.manual_check_successes += 1
             self.page_results_list.append(
-                '"%s","%s","%s","%s","%s","%s","%s","%s"' % (
+                '"%s","%s","%s","%s","%s","%s","%s","%s"'
+                % (
                     self.manual_check_count,
                     "Success",
                     "-",
@@ -238,13 +266,16 @@ class MasterQA(BaseCase):
                     self.browser,
                     self.__get_timestamp()[:-3],
                     instructions,
-                    "*"))
+                    "*",
+                )
+            )
             return 1
         else:
             bad_page_name = "failed_check_%s.png" % self.manual_check_count
             self.save_screenshot(bad_page_name, folder=self.LATEST_REPORT_DIR)
             self.page_results_list.append(
-                '"%s","%s","%s","%s","%s","%s","%s","%s"' % (
+                '"%s","%s","%s","%s","%s","%s","%s","%s"'
+                % (
                     self.manual_check_count,
                     "FAILED!",
                     bad_page_name,
@@ -252,7 +283,9 @@ class MasterQA(BaseCase):
                     self.browser,
                     self.__get_timestamp()[:-3],
                     instructions,
-                    "*"))
+                    "*",
+                )
+            )
             return 0
 
     def __wait_for_special_alert_absent(self):
@@ -268,23 +301,36 @@ class MasterQA(BaseCase):
                 return
         self.driver.quit()
         raise Exception(
-            "%s seconds passed without human action! Stopping..." % timeout)
+            "%s seconds passed without human action! Stopping..." % timeout
+        )
+
+    def __has_exception(self):
+        has_exception = False
+        if hasattr(sys, "last_traceback") and sys.last_traceback is not None:
+            has_exception = True
+        elif hasattr(self, "_outcome"):
+            if hasattr(self._outcome, "errors") and self._outcome.errors:
+                has_exception = True
+        else:
+            has_exception = sys.exc_info()[1] is not None
+        return has_exception
 
     def __add_failure(self, exception=None):
         exc_info = None
         if exception:
-            if hasattr(exception, 'msg'):
+            if hasattr(exception, "msg"):
                 exc_info = exception.msg
-            elif hasattr(exception, 'message'):
+            elif hasattr(exception, "message"):
                 exc_info = exception.message
             else:
-                exc_info = '(Unknown Exception)'
+                exc_info = "(Unknown Exception)"
 
         self.incomplete_runs += 1
         error_page = "automation_failure_%s.png" % self.incomplete_runs
         self.save_screenshot(error_page, folder=self.LATEST_REPORT_DIR)
         self.page_results_list.append(
-            '"%s","%s","%s","%s","%s","%s","%s","%s"' % (
+            '"%s","%s","%s","%s","%s","%s","%s","%s"'
+            % (
                 "ERR",
                 "ERROR!",
                 error_page,
@@ -292,7 +338,9 @@ class MasterQA(BaseCase):
                 self.browser,
                 self.__get_timestamp()[:-3],
                 "-",
-                exc_info))
+                exc_info,
+            )
+        )
         try:
             # Return to the original window if another was opened
             self.driver.switch_to_window(self.driver.window_handles[1])
@@ -302,12 +350,12 @@ class MasterQA(BaseCase):
             pass
 
     def __add_bad_page_log_file(self):
-        abs_path = os.path.abspath('.')
-        file_path = abs_path + "/%s" % self.LATEST_REPORT_DIR
-        log_file = "%s/%s" % (file_path, self.BAD_PAGE_LOG)
-        f = open(log_file, 'w')
-        h_p1 = '''"Num","Result","Screenshot","URL","Browser","Epoch Time",'''
-        h_p2 = '''"Verification Instructions","Additional Info"\n'''
+        abs_path = os.path.abspath(".")
+        file_path = os.path.join(abs_path, self.LATEST_REPORT_DIR)
+        log_file = os.path.join(file_path, self.BAD_PAGE_LOG)
+        f = open(log_file, "w")
+        h_p1 = """"Num","Result","Screenshot","URL","Browser","Epoch Time","""
+        h_p2 = """"Verification Instructions","Additional Info"\n"""
         page_header = h_p1 + h_p2
         f.write(page_header)
         for line in self.page_results_list:
@@ -315,11 +363,11 @@ class MasterQA(BaseCase):
         f.close()
 
     def __add_results_page(self, html):
-        abs_path = os.path.abspath('.')
-        file_path = abs_path + "/%s" % self.LATEST_REPORT_DIR
+        abs_path = os.path.abspath(".")
+        file_path = os.path.join(abs_path, self.LATEST_REPORT_DIR)
         results_file_name = self.RESULTS_PAGE
-        results_file = "%s/%s" % (file_path, results_file_name)
-        f = open(results_file, 'w')
+        results_file = os.path.join(file_path, results_file_name)
+        f = open(results_file, "w")
         f.write(html)
         f.close()
         return results_file
@@ -327,11 +375,13 @@ class MasterQA(BaseCase):
     def __process_manual_check_results(self, auto_close_results_page=False):
         perfection = True
         failures_count = self.manual_check_count - self.manual_check_successes
-        print("\n\n*** Test Result: ***")
+        if not self.headless:
+            print("")
+        print("\n*** MasterQA Manual Test Results: ***")
         if self.manual_check_successes == self.manual_check_count:
             pass
         else:
-            print("WARNING: There were page issues detected!")
+            print("WARNING: Not all tests passed manual inspection!")
             perfection = False
 
         if self.incomplete_runs > 0:
@@ -348,10 +398,10 @@ class MasterQA(BaseCase):
         self.__add_bad_page_log_file()  # Includes successful results
 
         log_string = self.__clear_out_old_logs(get_log_folder=True)
-        log_folder = log_string.split('/')[-1]
-        abs_path = os.path.abspath('.')
-        file_path = abs_path + "/%s" % self.ARCHIVE_DIR
-        log_path = "%s/%s" % (file_path, log_folder)
+        log_folder = log_string.split(os.sep)[-1]
+        abs_path = os.path.abspath(".")
+        file_path = os.path.join(abs_path, self.ARCHIVE_DIR)
+        log_path = os.path.join(file_path, log_folder)
         web_log_path = "file://%s" % log_path
 
         tf_color = "#11BB11"
@@ -362,7 +412,7 @@ class MasterQA(BaseCase):
         if self.incomplete_runs > 0:
             ir_color = "#EE3A3A"
 
-        summary_table = '''<div><table><thead><tr>
+        summary_table = """<div><table><thead><tr>
               <th>TESTING SUMMARY</th>
               <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
               </tr></thead><tbody>
@@ -370,56 +420,75 @@ class MasterQA(BaseCase):
               <tr style="color:%s"     ><td>CHECKS FAILED: <td>%s</tr>
               <tr style="color:#4D4DDD"><td>TOTAL VERIFICATIONS: <td>%s</tr>
               <tr style="color:%s"     ><td>INCOMPLETE TEST RUNS: <td>%s</tr>
-              </tbody></table>''' % (self.manual_check_successes,
-                                     tf_color,
-                                     failures_count,
-                                     self.manual_check_count,
-                                     ir_color,
-                                     self.incomplete_runs)
+              </tbody></table>""" % (
+            self.manual_check_successes,
+            tf_color,
+            failures_count,
+            self.manual_check_count,
+            ir_color,
+            self.incomplete_runs,
+        )
 
-        summary_table = '''<h1 id="ContextHeader" class="sectionHeader" title="">
-                     %s</h1>''' % summary_table
+        summary_table = (
+            """<h1 id="ContextHeader" class="sectionHeader" title="">
+                     %s</h1>"""
+            % summary_table
+        )
 
-        log_link_shown = '../%s%s/' % (
-            self.ARCHIVE_DIR, web_log_path.split(self.ARCHIVE_DIR)[1])
-        csv_link = '%s/%s' % (web_log_path, self.BAD_PAGE_LOG)
-        csv_link_shown = '%s' % self.BAD_PAGE_LOG
-        log_table = '''<p><p><p><p><h2><table><tbody>
+        log_link_shown = os.path.join(
+            "..", "%s%s" % (
+                self.ARCHIVE_DIR, web_log_path.split(self.ARCHIVE_DIR)[1]
+            )
+        )
+        csv_link = os.path.join(web_log_path, self.BAD_PAGE_LOG)
+        csv_link_shown = "%s" % self.BAD_PAGE_LOG
+        log_table = """<p><p><p><p><h2><table><tbody>
             <tr><td>LOG FILES LINK:&nbsp;&nbsp;<td><a href="%s">%s</a></tr>
             <tr><td>RESULTS TABLE:&nbsp;&nbsp;<td><a href="%s">%s</a></tr>
-            </tbody></table></h2><p><p><p><p>''' % (
-            web_log_path, log_link_shown, csv_link, csv_link_shown)
+            </tbody></table></h2><p><p><p><p>""" % (
+            web_log_path,
+            log_link_shown,
+            csv_link,
+            csv_link_shown,
+        )
 
-        failure_table = '<h2><table><tbody></div>'
+        failure_table = "<h2><table><tbody></div>"
         any_screenshots = False
         for line in self.page_results_list:
-            line = line.split(',')
+            line = line.split(",")
             if line[1] == '"FAILED!"' or line[1] == '"ERROR!"':
                 if not any_screenshots:
                     any_screenshots = True
-                    failure_table += '''<thead><tr>
+                    failure_table += """<thead><tr>
                         <th>SCREENSHOT FILE&nbsp;&nbsp;&nbsp;&nbsp;</th>
                         <th>LOCATION OF FAILURE</th>
-                        </tr></thead>'''
+                        </tr></thead>"""
                 display_url = line[3]
                 if len(display_url) > 60:
-                    display_url = display_url[0:58] + '...'
-                line = '<a href="%s">%s</a>' % (
-                    "file://" + log_path + '/' + line[2], line[2]) + '''
+                    display_url = display_url[0:58] + "..."
+                line = (
+                    '<a href="%s">%s</a>'
+                    % ("file://" + log_path + "/" + line[2], line[2])
+                    + """
                     &nbsp;&nbsp;&nbsp;&nbsp;<td>
-                    ''' + '<a href="%s">%s</a>' % (line[3], display_url)
-                line = line.replace('"', '')
-                failure_table += '<tr><td>%s</tr>\n' % line
-        failure_table += '</tbody></table>'
-        table_view = '%s%s%s' % (
-            summary_table, log_table, failure_table)
-        report_html = '<html><head>%s</head><body>%s</body></html>' % (
-            style, table_view)
+                    """
+                    + '<a href="%s">%s</a>' % (line[3], display_url)
+                )
+                line = line.replace('"', "")
+                failure_table += "<tr><td>%s</tr>\n" % line
+        failure_table += "</tbody></table>"
+        table_view = "%s%s%s" % (summary_table, log_table, failure_table)
+        report_html = "<html><head>%s</head><body>%s</body></html>" % (
+            get_report_style(),
+            table_view,
+        )
         results_file = self.__add_results_page(report_html)
-        archived_results_file = log_path + '/' + self.RESULTS_PAGE
-        shutil.copyfile(results_file, archived_results_file)
-        print(
-            "\n*** The results html page is located at: ***\n" + results_file)
+        archived_results_file = os.path.join(log_path, self.RESULTS_PAGE)
+        shutil.copyfile(results_file, os.path.realpath(archived_results_file))
+        if self.manual_check_count > 0:
+            print(
+                "\n*** The manual test report is located at:\n" + results_file
+            )
         self.open("file://%s" % archived_results_file)
         if auto_close_results_page:
             # Long enough to notice the results before closing the page
@@ -427,5 +496,8 @@ class MasterQA(BaseCase):
         else:
             # The user can decide when to close the results page
             print("\n*** Close the html report window to continue ***")
-            while len(self.driver.window_handles):
-                time.sleep(0.1)
+            try:
+                while len(self.driver.window_handles):
+                    time.sleep(0.1)
+            except Exception:
+                pass

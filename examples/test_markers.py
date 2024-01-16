@@ -8,16 +8,14 @@
         pytest test_markers.py -v -m "not marker2"     # Runs A, D
 
     (The "-v" will display the names of tests as they run.)
-    (Add "--collect-only" to display names of tests without running them.)
-"""
-
+    (Add "--collect-only" to display names of tests without running them.)"""
 import pytest
 from seleniumbase import BaseCase
+BaseCase.main(__name__, __file__)
 
 
 @pytest.mark.marker_test_suite
 class MarkerTestSuite(BaseCase):
-
     @pytest.mark.marker1
     def test_A(self):
         self.open("https://xkcd.com/1319/")

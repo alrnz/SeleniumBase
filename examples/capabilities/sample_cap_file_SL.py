@@ -1,9 +1,8 @@
 # Desired capabilities example file for Sauce Labs
-# Generate from https://wiki.saucelabs.com/display/DOCS/Platform+Configurator#/
+# Generate from https://saucelabs.com/products/platform-configurator
 capabilities = {
-    'browserName': 'firefox',
-    'browserVersion': '70.0',
-    'platformName': 'macOS 10.13',
-    'sauce:options': {
-    }
+    "browserName": "chrome",
+    "browserVersion": "latest",
+    "platformName": "macOS 10.14",
+    "sauce:options": {},
 }

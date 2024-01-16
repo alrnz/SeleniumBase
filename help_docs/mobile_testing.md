@@ -1,37 +1,89 @@
-[<img src="https://cdn2.hubspot.net/hubfs/100006/images/SeleniumBaseText_F.png" title="SeleniumBase" align="center" height="40">](https://github.com/seleniumbase/SeleniumBase/blob/master/README.md)
-## <img src="https://cdn2.hubspot.net/hubfs/100006/images/super_square_logo_3a.png" title="SeleniumBase" height="32"> Mobile Testing
+<!-- SeleniumBase Docs -->
 
-Use ``--mobile`` to run your SeleniumBase tests using Chrome's (or Edge's) mobile device emulator with default values for device metrics (CSS Width, CSS Height, Pixel-Ratio) and user agent.
+## [<img src="https://seleniumbase.github.io/img/logo6.png" title="SeleniumBase" width="32">](https://github.com/seleniumbase/SeleniumBase/) Mobile Mode / Mobile Testing
 
-To configure the mobile device metrics, use ``--metrics="CSS_Width,CSS_Height,Pixel_Ratio"``. To configure the user agent, use ``--agent="USER-AGENT-STRING"``.
+Use ``--mobile`` to run SeleniumBase tests using Chrome's mobile device emulator with default values for Device Metrics and User-Agent.
 
-To find real values for device metrics, [see this GitHub Gist](https://gist.github.com/sidferreira/3f5fad525e99b395d8bd882ee0fd9d00). For a list of available user agent strings, [check out this page](https://developers.whatismybrowser.com/useragents/explore/).
+<b>Here's an example mobile test:</b>
 
---------
-
-Here's an example of running a mobile test (See https://github.com/seleniumbase/SeleniumBase/blob/master/examples/test_skype_site.py):
+[SeleniumBase/examples/test_skype_site.py](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/test_skype_site.py)
 
 ```bash
-pytest test_skype_site.py --mobile --browser=edge
+pytest test_skype_site.py --mobile
 ```
-[<img src="https://cdn2.hubspot.net/hubfs/100006/images/skype_mobile_test_2.gif" title="SeleniumBase Mobile Testing">](https://cdn2.hubspot.net/hubfs/100006/images/skype_mobile_test_2.gif)
+
+[<img src="https://seleniumbase.github.io/cdn/gif/skype_mobile_test_2.gif" title="SeleniumBase Mobile Testing">](https://seleniumbase.github.io/cdn/gif/skype_mobile_test_2.gif)
+
+To configure Device Metrics, use:
+
+```bash
+--metrics="CSS_Width,CSS_Height,Pixel_Ratio"
+```
+
+To configure the User-Agent, use:
+
+```bash
+--agent="USER-AGENT-STRING"
+```
+
+To find real values for Device Metrics, see:
+
+* [Device Metrics List](https://gist.github.com/sidferreira/3f5fad525e99b395d8bd882ee0fd9d00)
+
+To find real User-Agent strings, see:
+
+* [User Agent Strings List](https://developers.whatismybrowser.com/useragents/explore/)
 
 --------
 
-Here's another example of running a mobile test (https://github.com/seleniumbase/SeleniumBase/blob/master/examples/test_swag_labs.py), which demonstrates using ``--metrics`` and ``--agent`` with ``--mobile``:
+<b>Here's another example of a mobile test:</b>
+
+[SeleniumBase/examples/test_swag_labs.py](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/test_swag_labs.py)
+
+```bash
+pytest test_swag_labs.py --mobile
+```
+
+[<img src="https://seleniumbase.github.io/cdn/gif/swag_mobile_2.gif" alt="SeleniumBase Mobile Testing" title="SeleniumBase Mobile Testing">](https://seleniumbase.github.io/cdn/gif/swag_mobile.gif)
+
+<b>Here's an example of configuring mobile settings for that test:</b>
 
 ```bash
 # Run tests using Chrome's mobile device emulator (default settings)
 pytest test_swag_labs.py --mobile
 
 # Run mobile tests specifying CSS Width, CSS Height, and Pixel-Ratio
-pytest test_swag_labs.py --mobile --metrics="411,731,3"
+pytest test_swag_labs.py --mobile --metrics="360,640,2"
 
 # Run mobile tests specifying the user agent
 pytest test_swag_labs.py --mobile --agent="Mozilla/5.0 (Linux; Android 9; Pixel 3 XL)"
 ```
-[<img src="https://cdn2.hubspot.net/hubfs/100006/images/swag_mobile.gif" title="SeleniumBase Mobile Testing">](https://cdn2.hubspot.net/hubfs/100006/images/swag_mobile.gif)
 
 --------
 
-If you're new to SeleniumBase, read https://github.com/seleniumbase/SeleniumBase to help you get started.
+For some [SeleniumBase Syntax Formats](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/syntax_formats.md), you can also use `mobile=True` to run tests in Mobile Mode:
+
+```python
+from seleniumbase import Driver
+
+driver = Driver(mobile=True)
+try:
+    driver.open("https://www.skype.com/en/get-skype/")
+    driver.assert_element('[aria-label="Microsoft"]')
+    driver.assert_text("Download Skype", "h1")
+    driver.highlight("div.appBannerContent")
+    driver.highlight("h1")
+    driver.assert_text("Skype for Mobile", "h2")
+    driver.highlight("h2")
+    driver.highlight("#get-skype-0")
+    driver.highlight_click("span[data-dropdown-icon]")
+    driver.highlight("#get-skype-0_android-download")
+    driver.highlight('[data-bi-id*="ios"]')
+finally:
+    driver.quit()
+```
+
+--------
+
+<p align="center"><div align="center"><a href="https://seleniumbase.io">
+<img src="https://img.shields.io/badge/docs-%20seleniumbase.io-11BBDD.svg" alt="SeleniumBase.io Docs" /></a> <a href="https://github.com/seleniumbase/SeleniumBase"><img src="https://img.shields.io/badge/✅%20💛%20View%20Code-on%20GitHub%20🌎%20🚀-02A79E.svg" alt="SeleniumBase.io Docs" /></a></div></p>

@@ -1,74 +1,129 @@
-## <img src="https://cdn2.hubspot.net/hubfs/100006/images/super_square_logo_3a.png" title="SeleniumBase" height="32"> Virtual Environment Tutorial
+<!-- SeleniumBase Docs -->
 
-### **Step 1**: Install VirtualEnv and VirtualEnvWrapper:
+## Virtual Environment Tutorial
 
-### macOS / Linux:
+There are multiple ways of creating a **[Python virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment)**. This tutorial covers two of those:
 
-(*Shortcut*: Run "``source virtualenv_install.sh``" from the top-level SeleniumBase folder to perform the following steps.)
+* The ``venv`` command (<i>included with Python 3+</i>).
+* The virtualenvwrapper ``mkvirtualenv`` command.
+
+``venv`` creates virtual environments in the location where run (<i>generally with Python projects</i>).
+
+``mkvirtualenv`` creates virtual environments in one place (<i>generally in your home directory</i>).
+
+(The [Python Software Foundation](https://www.python.org/psf/) recommends ``venv`` for creating virtual environments.)
+
+
+<h3><img src="https://seleniumbase.github.io/img/logo6.png" title="SeleniumBase" width="32" /> Option 1: Using "venv"</h3>
+
+> macOS/Linux terminal (``python3 -m venv ENV``)
 
 ```bash
-python -m pip install --upgrade virtualenv
-python -m pip install --upgrade virtualenvwrapper
+python3 -m venv sbase_env
+source sbase_env/bin/activate
+```
+
+> Windows CMD prompt (``py -m venv ENV``):
+
+```bash
+py -m venv sbase_env
+call sbase_env\\Scripts\\activate
+```
+
+To exit a virtual env, type ``deactivate``.
+
+--------
+
+<h3><img src="https://seleniumbase.github.io/img/logo6.png" title="SeleniumBase" width="32" /> Option 2: Using virtualenvwrapper</h3>
+
+> macOS/Linux terminal:
+
+```bash
+python3 -m pip install virtualenvwrapper --force-reinstall
 export WORKON_HOME=$HOME/.virtualenvs
 source `which virtualenvwrapper.sh`
 ```
 
-If you add ``source `which virtualenvwrapper.sh` `` to your local bash file (``~/.bash_profile`` on macOS, or ``~/.bashrc`` on Linux), virtualenvwrapper commands such as ``mkvirtualenv`` will be available whenever you open a new command prompt.
+(*Shortcut*: Run ``source virtualenv_install.sh`` from the top-level SeleniumBase folder to perform the above steps.)
 
-### Windows:
+(If you add ``source `which virtualenvwrapper.sh` `` to your local bash file (``~/.bash_profile`` on macOS, or ``~/.bashrc`` on Linux), virtualenvwrapper commands such as ``mkvirtualenv`` will be available whenever you open a new command prompt.)
 
-(*Shortcut*: Run "``virtualenv_install.bat``" from the top-level SeleniumBase folder to perform the following steps.)
+> Windows CMD prompt:
 
 ```bash
-python -m pip install --upgrade virtualenvwrapper-win
+py -m pip install virtualenvwrapper-win --force-reinstall --user
 ```
 
-### **Step 2**: Create a virtual environment:
+(*Shortcut*: Run ``win_virtualenv.bat`` from the top-level SeleniumBase folder to perform the above step.)
 
-### macOS / Linux / Windows:
 
-* Using ``mkvirtualenv``:
+<h3>Create a virtual environment:</h3>
+
+* ``mkvirtualenv ENV``:
+
 ```bash
-mkvirtualenv seleniumbase_venv
+mkvirtualenv sbase_env
 ```
-(If you have multiple versions of Python installed on your machine, and you want your virtual environment to use a specific Python version, add ``--python=PATH_TO_PYTHON_EXE`` with the Python executable to use.)
 
-* Using ``virtualenv``:
+(If you have multiple versions of Python installed on your machine, and you want your virtual environment to use a specific Python version, add ``--python=PATH_TO_PYTHON_EXE`` to your ``mkvirtualenv`` command with the Python executable to use.)
+
+
+<h3><img src="https://seleniumbase.github.io/img/logo6.png" title="SeleniumBase" width="32" /> virtualenvwrapper commands:</h3>
+
+Creating a virtual environment:
+
 ```bash
-virtualenv seleniumbase_venv
-source seleniumbase_venv/bin/activate
+mkvirtualenv sbase_env
 ```
 
-* (Python 3) Using ``mvenv``:
-```bash
-python3 -mvenv seleniumbase_venv
-source seleniumbase_venv/bin/activate
-```
-
----
-
-If you ever need to leave your virtual environment, use the following command:
+Leaving your virtual environment:
 
 ```bash
 deactivate
 ```
 
-You can always jump back into your virtual environment later:
+Returning to a virtual environment:
 
 ```bash
-workon seleniumbase_venv
+workon sbase_env
 ```
 
-To list all existing virtual environments:
+Listing all virtual environments:
 
 ```bash
-lsvirtualenv
+workon
 ```
 
-To delete a virtual environment:
+Deleting a virtual environment:
 
 ```bash
-rmvirtualenv VIRTUAL_ENV_NAME
+rmvirtualenv sbase_env
 ```
 
-<br><i>[python-guide.org/en/latest/dev/virtualenvs](http://docs.python-guide.org/en/latest/dev/virtualenvs/) has more information about Python virtual environments. For specific details about VirtualEnv and VirtualEnvWrapper, see [http://virtualenv.readthedocs.org/en/latest/](http://virtualenv.readthedocs.org/en/latest/) and [http://virtualenvwrapper.readthedocs.org/en/latest/](http://virtualenvwrapper.readthedocs.org/en/latest/).</i>
+--------
+
+If the ``python`` and ``python3`` versions don't match (*while in a virtualenv on macOS or Linux*), the following command will sync the versions:
+
+```bash
+alias python=python3
+```
+
+(To remove an alias, use: ``unalias NAME``)
+
+--------
+
+To verify the ``python`` version, use:
+
+```bash
+python --version
+```
+
+To see the PATH of your ``python`` (macOS/Linux), use:
+
+```bash
+which python
+```
+
+--------
+
+> <i>[python-guide.org/en/latest/dev/virtualenvs](http://docs.python-guide.org/en/latest/dev/virtualenvs/) has more information about Python virtual environments. For specific details about VirtualEnv and VirtualEnvWrapper, see [http://virtualenv.readthedocs.org/en/latest/](http://virtualenv.readthedocs.org/en/latest/) and [http://virtualenvwrapper.readthedocs.org/en/latest/](http://virtualenvwrapper.readthedocs.org/en/latest/).</i>

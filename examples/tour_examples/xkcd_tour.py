@@ -1,10 +1,10 @@
 from seleniumbase import BaseCase
+BaseCase.main(__name__, __file__)
 
 
 class MyTestClass(BaseCase):
-
-    def test_basic(self):
-        self.open('https://xkcd.com/1117/')
+    def test_create_tour(self):
+        self.open("https://xkcd.com/1117/")
         self.assert_element('img[alt="My Sky"]')
         self.create_tour(theme="dark")
         self.add_tour_step("Welcome to XKCD!")
@@ -17,5 +17,5 @@ class MyTestClass(BaseCase):
         self.add_tour_step("Click here for the license.", 'a[rel="license"]')
         self.add_tour_step("Click for a random comic.", 'a[href*="/random/"]')
         self.add_tour_step("Thanks for taking this tour!")
-        self.export_tour(filename="xkcd_tour.js")  # Exports the tour
-        self.play_tour()  # Plays the tour
+        self.export_tour(filename="xkcd_tour.js")
+        self.play_tour()

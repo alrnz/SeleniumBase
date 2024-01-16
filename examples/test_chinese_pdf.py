@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 from seleniumbase import BaseCase
+BaseCase.main(__name__, __file__)
 
 
-class ChinesePdfTestClass(BaseCase):
-
+class ChinesePdfTests(BaseCase):
     def test_chinese_pdf(self):
-
-        pdf = ('https://github.com/seleniumbase/SeleniumBase/'
-               'files/3895614/unittest.pdf')
+        self.open("data:,")
+        pdf = "https://seleniumbase.io/cdn/pdf/unittest_zh.pdf"
 
         # Get and print PDF text
         pdf_text = self.get_pdf_text(pdf, page=2)

@@ -1,12 +1,20 @@
-# Chinese / 中文 - Translations - Python 3 Only!
+# Chinese / 中文 - Translations
 from seleniumbase import BaseCase
+from seleniumbase import MasterQA
 
 
-class 硒测试用例(BaseCase):  # noqa
+class 硒测试用例(BaseCase):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._language = "Chinese"
 
-    def 开启网址(self, *args, **kwargs):
+    def 开启(self, *args, **kwargs):
         # open(url)
         return self.open(*args, **kwargs)
+
+    def 开启网址(self, *args, **kwargs):
+        # open_url(url)
+        return self.open_url(*args, **kwargs)
 
     def 单击(self, *args, **kwargs):
         # click(selector)
@@ -16,24 +24,45 @@ class 硒测试用例(BaseCase):  # noqa
         # double_click(selector)
         return self.double_click(*args, **kwargs)
 
+    def 上下文点击(self, *args, **kwargs):
+        # context_click(selector)
+        return self.context_click(*args, **kwargs)
+
     def 慢单击(self, *args, **kwargs):
         # slow_click(selector)
         return self.slow_click(*args, **kwargs)
+
+    def 如果可见请单击(self, *args, **kwargs):
+        # click_if_visible(selector, by=By.CSS_SELECTOR)
+        return self.click_if_visible(*args, **kwargs)
+
+    def JS如果存在请单击(self, *args, **kwargs):
+        # js_click_if_present(selector, by=By.CSS_SELECTOR)
+        return self.js_click_if_present(*args, **kwargs)
 
     def 单击链接文本(self, *args, **kwargs):
         # click_link_text(link_text)
         return self.click_link_text(*args, **kwargs)
 
+    def 鼠标点击偏移(self, *args, **kwargs):
+        # click_with_offset(selector, x, y, by=By.CSS_SELECTOR,
+        #                   mark=None, timeout=None, center=None)
+        return self.click_with_offset(*args, **kwargs)
+
     def 更新文本(self, *args, **kwargs):
-        # update_text(selector, new_value)
+        # update_text(selector, text)
         return self.update_text(*args, **kwargs)
 
+    def 输入文本(self, *args, **kwargs):
+        # type(selector, text)  # Same as update_text()
+        return self.type(*args, **kwargs)
+
     def 添加文本(self, *args, **kwargs):
-        # add_text(selector, new_value)
+        # add_text(selector, text)
         return self.add_text(*args, **kwargs)
 
     def 获取文本(self, *args, **kwargs):
-        # get_text(selector, new_value)
+        # get_text(selector, text)
         return self.get_text(*args, **kwargs)
 
     def 断言文本(self, *args, **kwargs):
@@ -48,13 +77,57 @@ class 硒测试用例(BaseCase):  # noqa
         # assert_link_text(link_text)
         return self.assert_link_text(*args, **kwargs)
 
+    def 断言非空文本(self, *args, **kwargs):
+        # assert_non_empty_text(selector)
+        return self.assert_non_empty_text(*args, **kwargs)
+
+    def 断言文本不可见(self, *args, **kwargs):
+        # assert_text_not_visible(text, selector)
+        return self.assert_text_not_visible(*args, **kwargs)
+
     def 断言元素(self, *args, **kwargs):
         # assert_element(selector)
         return self.assert_element(*args, **kwargs)
 
+    def 断言元素可见(self, *args, **kwargs):
+        # assert_element_visible(selector)  # Same as self.assert_element()
+        return self.assert_element_visible(*args, **kwargs)
+
+    def 断言元素不可见(self, *args, **kwargs):
+        # assert_element_not_visible(selector)
+        return self.assert_element_not_visible(*args, **kwargs)
+
+    def 断言元素存在(self, *args, **kwargs):
+        # assert_element_present(selector)
+        return self.assert_element_present(*args, **kwargs)
+
+    def 断言元素不存在(self, *args, **kwargs):
+        # assert_element_absent(selector)
+        return self.assert_element_absent(*args, **kwargs)
+
+    def 断言属性(self, *args, **kwargs):
+        # assert_attribute(selector, attribute, value)
+        return self.assert_attribute(*args, **kwargs)
+
+    def 断言URL(self, *args, **kwargs):
+        # assert_url(url)
+        return self.assert_url(*args, **kwargs)
+
+    def 断言URL包含(self, *args, **kwargs):
+        # assert_url_contains(substring)
+        return self.assert_url_contains(*args, **kwargs)
+
     def 断言标题(self, *args, **kwargs):
         # assert_title(title)
         return self.assert_title(*args, **kwargs)
+
+    def 断言标题包含(self, *args, **kwargs):
+        # assert_title_contains(substring)
+        return self.assert_title_contains(*args, **kwargs)
+
+    def 获取标题(self, *args, **kwargs):
+        # get_title()
+        return self.get_title(*args, **kwargs)
 
     def 断言为真(self, *args, **kwargs):
         # assert_true(expr)
@@ -96,9 +169,17 @@ class 硒测试用例(BaseCase):  # noqa
         # is_text_visible(text, selector="html")
         return self.is_text_visible(*args, **kwargs)
 
+    def 确切文本是否显示(self, *args, **kwargs):
+        # is_exact_text_visible(text, selector="html")
+        return self.is_exact_text_visible(*args, **kwargs)
+
     def 元素是否可见(self, *args, **kwargs):
         # is_element_visible(selector)
         return self.is_element_visible(*args, **kwargs)
+
+    def 元素是否启用(self, *args, **kwargs):
+        # is_element_enabled(selector)
+        return self.is_element_enabled(*args, **kwargs)
 
     def 元素是否存在(self, *args, **kwargs):
         # is_element_present(selector)
@@ -112,17 +193,73 @@ class 硒测试用例(BaseCase):  # noqa
         # wait_for_element(selector)
         return self.wait_for_element(*args, **kwargs)
 
+    def 等待元素可见(self, *args, **kwargs):
+        # wait_for_element_visible(selector)  # Same as wait_for_element()
+        return self.wait_for_element_visible(*args, **kwargs)
+
+    def 等待元素不可见(self, *args, **kwargs):
+        # wait_for_element_not_visible(selector)
+        return self.wait_for_element_not_visible(*args, **kwargs)
+
+    def 等待元素存在(self, *args, **kwargs):
+        # wait_for_element_present(selector)
+        return self.wait_for_element_present(*args, **kwargs)
+
+    def 等待元素不存在(self, *args, **kwargs):
+        # wait_for_element_absent(selector)
+        return self.wait_for_element_absent(*args, **kwargs)
+
+    def 等待属性(self, *args, **kwargs):
+        # wait_for_attribute(selector, attribute, value)
+        return self.wait_for_attribute(*args, **kwargs)
+
+    def 等待页面加载完成(self, *args, **kwargs):
+        # wait_for_ready_state_complete()
+        return self.wait_for_ready_state_complete(*args, **kwargs)
+
     def 睡(self, *args, **kwargs):
         # sleep(seconds)
         return self.sleep(*args, **kwargs)
+
+    def 等待(self, *args, **kwargs):
+        # wait(seconds)  # Same as sleep(seconds)
+        return self.wait(*args, **kwargs)
 
     def 提交(self, *args, **kwargs):
         # submit(selector)
         return self.submit(*args, **kwargs)
 
+    def 清除(self, *args, **kwargs):
+        # clear(selector)
+        return self.clear(*args, **kwargs)
+
+    def 专注于(self, *args, **kwargs):
+        # focus(selector)
+        return self.focus(*args, **kwargs)
+
     def JS单击(self, *args, **kwargs):
         # js_click(selector)
         return self.js_click(*args, **kwargs)
+
+    def JS更新文本(self, *args, **kwargs):
+        # js_update_text(selector, text)
+        return self.js_update_text(*args, **kwargs)
+
+    def JS输入文本(self, *args, **kwargs):
+        # js_type(selector, text)
+        return self.js_type(*args, **kwargs)
+
+    def JQUERY单击(self, *args, **kwargs):
+        # jquery_click(selector)
+        return self.jquery_click(*args, **kwargs)
+
+    def JQUERY更新文本(self, *args, **kwargs):
+        # jquery_update_text(selector, text)
+        return self.jquery_update_text(*args, **kwargs)
+
+    def JQUERY输入文本(self, *args, **kwargs):
+        # jquery_type(selector, text)
+        return self.jquery_type(*args, **kwargs)
 
     def 检查HTML(self, *args, **kwargs):
         # inspect_html()
@@ -132,6 +269,10 @@ class 硒测试用例(BaseCase):  # noqa
         # save_screenshot(name)
         return self.save_screenshot(*args, **kwargs)
 
+    def 保存截图到日志(self, *args, **kwargs):
+        # save_screenshot_to_logs(name)
+        return self.save_screenshot_to_logs(*args, **kwargs)
+
     def 选择文件(self, *args, **kwargs):
         # choose_file(selector, file_path)
         return self.choose_file(*args, **kwargs)
@@ -139,6 +280,22 @@ class 硒测试用例(BaseCase):  # noqa
     def 执行脚本(self, *args, **kwargs):
         # execute_script(script)
         return self.execute_script(*args, **kwargs)
+
+    def 安全执行脚本(self, *args, **kwargs):
+        # safe_execute_script(script)
+        return self.safe_execute_script(*args, **kwargs)
+
+    def 加载JQUERY(self, *args, **kwargs):
+        # activate_jquery()
+        return self.activate_jquery(*args, **kwargs)
+
+    def 加载RECORDER(self, *args, **kwargs):
+        # activate_recorder()
+        return self.activate_recorder(*args, **kwargs)
+
+    def 开启如果不网址(self, *args, **kwargs):
+        # open_if_not_url(url)
+        return self.open_if_not_url(*args, **kwargs)
 
     def 阻止广告(self, *args, **kwargs):
         # ad_block()
@@ -164,6 +321,10 @@ class 硒测试用例(BaseCase):  # noqa
         # switch_to_default_content()
         return self.switch_to_default_content(*args, **kwargs)
 
+    def 切换到父框架(self, *args, **kwargs):
+        # switch_to_parent_frame()
+        return self.switch_to_parent_frame(*args, **kwargs)
+
     def 打开新窗口(self, *args, **kwargs):
         # open_new_window()
         return self.open_new_window(*args, **kwargs)
@@ -175,6 +336,14 @@ class 硒测试用例(BaseCase):  # noqa
     def 切换到默认窗口(self, *args, **kwargs):
         # switch_to_default_window()
         return self.switch_to_default_window(*args, **kwargs)
+
+    def 切换到最新的窗口(self, *args, **kwargs):
+        # switch_to_newest_window()
+        return self.switch_to_newest_window(*args, **kwargs)
+
+    def 最大化窗口(self, *args, **kwargs):
+        # maximize_window()
+        return self.maximize_window(*args, **kwargs)
 
     def 亮点(self, *args, **kwargs):
         # highlight(selector)
@@ -196,9 +365,13 @@ class 硒测试用例(BaseCase):  # noqa
         # scroll_to_bottom()
         return self.scroll_to_bottom(*args, **kwargs)
 
-    def 悬停并单击(self, *args, **kwargs):
+    def 鼠标悬停并单击(self, *args, **kwargs):
         # hover_and_click(hover_selector, click_selector)
         return self.hover_and_click(*args, **kwargs)
+
+    def 鼠标悬停(self, *args, **kwargs):
+        # hover(selector)
+        return self.hover(*args, **kwargs)
 
     def 是否被选中(self, *args, **kwargs):
         # is_selected(selector)
@@ -236,6 +409,70 @@ class 硒测试用例(BaseCase):  # noqa
         # select_option_by_value(dropdown_selector, option)
         return self.select_option_by_value(*args, **kwargs)
 
+    def 创建演示文稿(self, *args, **kwargs):
+        # create_presentation(name=None, theme="default", transition="default")
+        return self.create_presentation(*args, **kwargs)
+
+    def 添加幻灯片(self, *args, **kwargs):
+        # add_slide(content=None, image=None, code=None, iframe=None,
+        #           content2=None, notes=None, transition=None, name=None)
+        return self.add_slide(*args, **kwargs)
+
+    def 保存演示文稿(self, *args, **kwargs):
+        # save_presentation(name=None, filename=None,
+        #                   show_notes=False, interval=0)
+        return self.save_presentation(*args, **kwargs)
+
+    def 开始演示文稿(self, *args, **kwargs):
+        # begin_presentation(name=None, filename=None,
+        #                    show_notes=False, interval=0)
+        return self.begin_presentation(*args, **kwargs)
+
+    def 创建饼图(self, *args, **kwargs):
+        # create_pie_chart(chart_name=None, title=None, subtitle=None,
+        #                  data_name=None, unit=None, libs=True)
+        return self.create_pie_chart(*args, **kwargs)
+
+    def 创建条形图(self, *args, **kwargs):
+        # create_bar_chart(chart_name=None, title=None, subtitle=None,
+        #                  data_name=None, unit=None, libs=True)
+        return self.create_bar_chart(*args, **kwargs)
+
+    def 创建柱形图(self, *args, **kwargs):
+        # create_column_chart(chart_name=None, title=None, subtitle=None,
+        #                     data_name=None, unit=None, libs=True)
+        return self.create_column_chart(*args, **kwargs)
+
+    def 创建折线图(self, *args, **kwargs):
+        # create_line_chart(chart_name=None, title=None, subtitle=None,
+        #                   data_name=None, unit=None, zero=False, libs=True)
+        return self.create_line_chart(*args, **kwargs)
+
+    def 创建面积图(self, *args, **kwargs):
+        # create_area_chart(chart_name=None, title=None, subtitle=None,
+        #                   data_name=None, unit=None, zero=False, libs=True)
+        return self.create_area_chart(*args, **kwargs)
+
+    def 将系列添加到图表(self, *args, **kwargs):
+        # add_series_to_chart(data_name=None, chart_name=None)
+        return self.add_series_to_chart(*args, **kwargs)
+
+    def 添加数据点(self, *args, **kwargs):
+        # add_data_point(label, value, color=None, chart_name=None)
+        return self.add_data_point(*args, **kwargs)
+
+    def 保存图表(self, *args, **kwargs):
+        # save_chart(chart_name=None, filename=None)
+        return self.save_chart(*args, **kwargs)
+
+    def 显示图表(self, *args, **kwargs):
+        # display_chart(chart_name=None, filename=None, interval=0)
+        return self.display_chart(*args, **kwargs)
+
+    def 提取图表(self, *args, **kwargs):
+        # extract_chart(chart_name=None)
+        return self.extract_chart(*args, **kwargs)
+
     def 创建游览(self, *args, **kwargs):
         # create_tour(name=None, theme=None)
         return self.create_tour(*args, **kwargs)
@@ -247,6 +484,10 @@ class 硒测试用例(BaseCase):  # noqa
     def 创建BOOTSTRAP游览(self, *args, **kwargs):
         # create_bootstrap_tour(name=None, theme=None)
         return self.create_bootstrap_tour(*args, **kwargs)
+
+    def 创建DRIVERJS游览(self, *args, **kwargs):
+        # create_driverjs_tour(name=None, theme=None)
+        return self.create_driverjs_tour(*args, **kwargs)
 
     def 创建HOPSCOTCH游览(self, *args, **kwargs):
         # create_hopscotch_tour(name=None, theme=None)
@@ -268,3 +509,163 @@ class 硒测试用例(BaseCase):  # noqa
     def 导出游览(self, *args, **kwargs):
         # export_tour(name=None, filename="my_tour.js", url=None)
         return self.export_tour(*args, **kwargs)
+
+    def 获取PDF文本(self, *args, **kwargs):
+        # get_pdf_text(pdf, page=None, maxpages=None, password=None,
+        #              codec='utf-8', wrap=False, nav=False, override=False)
+        return self.get_pdf_text(*args, **kwargs)
+
+    def 断言PDF文本(self, *args, **kwargs):
+        # assert_pdf_text(pdf, text, page=None, maxpages=None, password=None,
+        #                 codec='utf-8', wrap=True, nav=False, override=False)
+        return self.assert_pdf_text(*args, **kwargs)
+
+    def 下载文件(self, *args, **kwargs):
+        # download_file(file)
+        return self.download_file(*args, **kwargs)
+
+    def 下载的文件是否存在(self, *args, **kwargs):
+        # is_downloaded_file_present(file)
+        return self.is_downloaded_file_present(*args, **kwargs)
+
+    def 获取下载的文件路径(self, *args, **kwargs):
+        # get_path_of_downloaded_file(file)
+        return self.get_path_of_downloaded_file(*args, **kwargs)
+
+    def 检查下载的文件(self, *args, **kwargs):
+        # assert_downloaded_file(file)
+        return self.assert_downloaded_file(*args, **kwargs)
+
+    def 删除下载的文件(self, *args, **kwargs):
+        # delete_downloaded_file(file)
+        return self.delete_downloaded_file(*args, **kwargs)
+
+    def 失败(self, *args, **kwargs):
+        # fail(msg=None)  # Inherited from "unittest"
+        return self.fail(*args, **kwargs)
+
+    def 获取(self, *args, **kwargs):
+        # get(url)  # Same as open(url)
+        return self.get(*args, **kwargs)
+
+    def 访问(self, *args, **kwargs):
+        # visit(url)  # Same as open(url)
+        return self.visit(*args, **kwargs)
+
+    def 访问网址(self, *args, **kwargs):
+        # visit_url(url)  # Same as open(url)
+        return self.visit_url(*args, **kwargs)
+
+    def 获取元素(self, *args, **kwargs):
+        # get_element(selector)  # Element can be hidden
+        return self.get_element(*args, **kwargs)
+
+    def 查找元素(self, *args, **kwargs):
+        # find_element(selector)  # Element must be visible
+        return self.find_element(*args, **kwargs)
+
+    def 删除第一个元素(self, *args, **kwargs):
+        # remove_element(selector)
+        return self.remove_element(*args, **kwargs)
+
+    def 删除所有元素(self, *args, **kwargs):
+        # remove_elements(selector)
+        return self.remove_elements(*args, **kwargs)
+
+    def 查找文本(self, *args, **kwargs):
+        # find_text(text, selector="html")  # Same as wait_for_text
+        return self.find_text(*args, **kwargs)
+
+    def 设置文本(self, *args, **kwargs):
+        # set_text(selector, text)
+        return self.set_text(*args, **kwargs)
+
+    def 获取属性(self, *args, **kwargs):
+        # get_attribute(selector, attribute)
+        return self.get_attribute(*args, **kwargs)
+
+    def 设置属性(self, *args, **kwargs):
+        # set_attribute(selector, attribute, value)
+        return self.set_attribute(*args, **kwargs)
+
+    def 设置所有属性(self, *args, **kwargs):
+        # set_attributes(selector, attribute, value)
+        return self.set_attributes(*args, **kwargs)
+
+    def 写文本(self, *args, **kwargs):
+        # write(selector, text)  # Same as update_text()
+        return self.write(*args, **kwargs)
+
+    def 设置消息主题(self, *args, **kwargs):
+        # set_messenger_theme(theme="default", location="default")
+        return self.set_messenger_theme(*args, **kwargs)
+
+    def 显示讯息(self, *args, **kwargs):
+        # post_message(message, duration=None, pause=True, style="info")
+        return self.post_message(*args, **kwargs)
+
+    def 打印(self, *args, **kwargs):
+        # _print(msg)  # Same as Python print()
+        return self._print(*args, **kwargs)
+
+    def 推迟断言元素(self, *args, **kwargs):
+        # deferred_assert_element(selector)
+        return self.deferred_assert_element(*args, **kwargs)
+
+    def 推迟断言文本(self, *args, **kwargs):
+        # deferred_assert_text(text, selector="html")
+        return self.deferred_assert_text(*args, **kwargs)
+
+    def 处理推迟断言(self, *args, **kwargs):
+        # process_deferred_asserts(print_only=False)
+        return self.process_deferred_asserts(*args, **kwargs)
+
+    def 接受警报(self, *args, **kwargs):
+        # accept_alert(timeout=None)
+        return self.accept_alert(*args, **kwargs)
+
+    def 解除警报(self, *args, **kwargs):
+        # dismiss_alert(timeout=None)
+        return self.dismiss_alert(*args, **kwargs)
+
+    def 切换到警报(self, *args, **kwargs):
+        # switch_to_alert(timeout=None)
+        return self.switch_to_alert(*args, **kwargs)
+
+    def 拖放(self, *args, **kwargs):
+        # drag_and_drop(drag_selector, drop_selector)
+        return self.drag_and_drop(*args, **kwargs)
+
+    def 设置HTML(self, *args, **kwargs):
+        # set_content(html_string, new_page=False)
+        return self.set_content(*args, **kwargs)
+
+    def 加载HTML文件(self, *args, **kwargs):
+        # load_html_file(html_file, new_page=True)
+        return self.load_html_file(*args, **kwargs)
+
+    def 打开HTML文件(self, *args, **kwargs):
+        # open_html_file(html_file)
+        return self.open_html_file(*args, **kwargs)
+
+    def 删除所有COOKIE(self, *args, **kwargs):
+        # delete_all_cookies()
+        return self.delete_all_cookies(*args, **kwargs)
+
+    def 获取用户代理(self, *args, **kwargs):
+        # get_user_agent()
+        return self.get_user_agent(*args, **kwargs)
+
+    def 获取语言代码(self, *args, **kwargs):
+        # get_locale_code()
+        return self.get_locale_code(*args, **kwargs)
+
+
+class MasterQA_中文(MasterQA, 硒测试用例):
+    def 校验(self, *args, **kwargs):
+        # "Manual Check"
+        self.DEFAULT_VALIDATION_TITLE = "手动检查"
+        # "Does the page look good?"
+        self.DEFAULT_VALIDATION_MESSAGE = "页面是否看起来不错？"
+        # verify(QUESTION)
+        return self.verify(*args, **kwargs)

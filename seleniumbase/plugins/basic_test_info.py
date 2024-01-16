@@ -1,14 +1,4 @@
-"""
-The plugin for saving basic test info to the logs for Selenium tests.
-The created file will be saved in the default logs folder (in .../logs)
-Data to be saved includes:
-* Last page url
-* Browser
-* Server
-* Error
-* Traceback
-"""
-
+"""Test Info Plugin for SeleniumBase tests that run with pynose / nosetests"""
 import os
 import codecs
 import time
@@ -18,20 +8,15 @@ from seleniumbase.config import settings
 
 
 class BasicTestInfo(Plugin):
-    """
-    This plugin will capture basic info when a test fails or
-    raises an error. It will store that basic test info in
-    the default logs or in the file specified by the user.
-    """
+    """This plugin captures basic info when a test fails or raises an error."""
     name = "basic_test_info"  # Usage: --with-basic_test_info
-
     logfile_name = settings.BASIC_INFO_NAME
 
     def options(self, parser, env):
-        super(BasicTestInfo, self).options(parser, env=env)
+        super().options(parser, env=env)
 
     def configure(self, options, conf):
-        super(BasicTestInfo, self).configure(options, conf)
+        super().configure(options, conf)
         if not self.enabled:
             return
         self.options = options
@@ -61,6 +46,7 @@ class BasicTestInfo(Plugin):
         data_to_save.append("Timestamp: %s" % int(time.time()))
         data_to_save.append("Server: %s " % self.options.servername)
         data_to_save.append("%s: %s" % (type, err[0]))
-        data_to_save.append("Traceback: " + ''.join(
-            traceback.format_exception(*err)))
+        data_to_save.append(
+            "Traceback: " + "".join(traceback.format_exception(*err))
+        )
         log_file.writelines("\r\n".join(data_to_save))

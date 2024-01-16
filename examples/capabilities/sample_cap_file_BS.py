@@ -1,10 +1,12 @@
-# Desired capabilities example file for BrowserStack
-# Generate from https://www.browserstack.com/automate/capabilities
+# Desired capabilities example .py file for BrowserStack:
+# https://www.browserstack.com/docs/automate/capabilities
 desired_cap = {
-    'os': 'OS X',
-    'os_version': 'High Sierra',
-    'browser': 'Chrome',
-    'browser_version': '77.0',
-    'browserstack.local': 'false',
-    'browserstack.selenium_version': '3.141.59'
+    "browser": "Chrome",
+    "os": "Windows",
+    "os_version": "11",
+    "browser_version": "latest",
+    "browserstack.console": "info",
+    "browserstack.debug": "true",
+    "browserstack.networkLogs": "true",
+    "browserstack.local": "true",
 }

@@ -5,18 +5,52 @@ change the values here and add "--settings=custom_settings.py" when running.
 
 # Default timeout values for waiting for page elements to appear.
 MINI_TIMEOUT = 2
-SMALL_TIMEOUT = 6
+SMALL_TIMEOUT = 7
 LARGE_TIMEOUT = 10
 EXTREME_TIMEOUT = 30
 
-# If False, only logs from the most recent test run will be saved.
+# Default page load timeout.
+# In global Selenium settings, this value is set to 300 seconds by default.
+# When the timeout is exceeded: "Timed out receiving message from renderer"
+PAGE_LOAD_TIMEOUT = 120
+
+# Default page load strategy.
+# ["normal", "eager", "none"]
+# Selenium default = "normal"
+PAGE_LOAD_STRATEGY = "normal"
+
+# If True, existing logs from past test runs will be saved and take up space.
+# If False, only the logs from the most recent test run will be saved locally.
+# You can also archive existing logs on the command line with: "--archive_logs"
 ARCHIVE_EXISTING_LOGS = False
+
+# If True, existing downloads from past runs will be saved and take up space.
+# If False, only the downloads from the most recent run will be saved locally.
 ARCHIVE_EXISTING_DOWNLOADS = False
 
-# Waiting for Document.readyState to be "Complete" after browser actions.
+# If True, the last page screenshot will include the <body> and background.
+# If False, the last page screenshot will only include the <body> section.
+# Depending on the screen size, including a background could make the <body>
+# appear very small in the screenshot, which may require manually zooming in
+# on the <body> to see page details if you decide to include the background.
+SCREENSHOT_WITH_BACKGROUND = False
+
+# If True, switch to new tabs automatically if a click opens a new one.
+# (Only happens if the initial tab is still on same URL as before.)
+SWITCH_TO_NEW_TABS_ON_CLICK = True
+
+"""
+These methods add JS waits, such as self.wait_for_ready_state_complete(),
+which waits for document.readyState to be "complete" after Selenium actions.
+"""
+# Called after self.open(URL), NOT driver.get(URL)
 WAIT_FOR_RSC_ON_PAGE_LOADS = True
-WAIT_FOR_RSC_ON_CLICKS = True
+# Called after self.click(selector), NOT element.click()
+WAIT_FOR_RSC_ON_CLICKS = False
+# Wait for AngularJS calls to complete after various browser actions.
 WAIT_FOR_ANGULARJS = True
+# Skip ALL calls to wait_for_ready_state_complete() and wait_for_angularjs().
+SKIP_JS_WAITS = False
 
 # Changing the default behavior of Demo Mode. Activate with: --demo_mode
 DEFAULT_DEMO_MODE_TIMEOUT = 0.5
@@ -38,6 +72,12 @@ CHROME_START_HEIGHT = 840
 HEADLESS_START_WIDTH = 1440
 HEADLESS_START_HEIGHT = 1880
 
+# If True, hides messages related to downloading drivers.
+# If False, you'll see details about downloading drivers.
+# (This only affects driver downloads coming from tests.)
+# (Eg. Using "sbase get chromedriver" won't hide output.)
+HIDE_DRIVER_DOWNLOADS = False
+
 # Changing the default behavior of MasterQA Mode.
 MASTERQA_DEFAULT_VALIDATION_MESSAGE = "Does the page look good?"
 MASTERQA_WAIT_TIME_BEFORE_VERIFY = 0.5
@@ -48,6 +88,8 @@ MASTERQA_MAX_IDLE_TIME_BEFORE_QUIT = 600
 # (For 2-factor authentication using a time-based one-time password algorithm)
 # (See https://github.com/pyotp/pyotp and https://pypi.org/project/pyotp/ )
 # (Also works with Authy and other compatible apps.)
+# Usage: "self.get_google_auth_password()"  (output based on timestamp)
+# Usage with override: "self.get_google_auth_password(totp_key=TOTP_KEY)"
 TOTP_KEY = "base32secretABCD"
 
 # MySQL DB Credentials

@@ -1,27 +1,21 @@
-"""
-This is a mobile device test for Chromium-based browsers (such as MS Edge)
-Usage:  pytest test_skype_site.py --mobile --browser=edge
-
-Default mobile settings for User Agent and Device Metrics if not specifed:
-        User Agent:   --agent="Mozilla/5.0 (Linux; Android 9; Pixel 3 XL)"
-        CSS Width, CSS Height, Pixel-Ratio:   --metrics="411,731,3"
+"""Mobile device test for Chromium-based browsers (such as Edge)
+Example: "pytest test_skype_site.py --mobile --edge"
 """
 from seleniumbase import BaseCase
 
+if __name__ == "__main__":
+    from pytest import main
+    main([__file__, "--mobile", "--edge", "-s"])
 
-class SkypeWebsiteTestClass(BaseCase):
 
-    def test_skype_website_on_mobile(self):
+class SkypeTests(BaseCase):
+    def test_skype_mobile_site(self):
         if not self.mobile_emulator:
-            print("\n  This test is only for mobile devices / emulators!")
-            print("  (Usage: '--mobile' with a Chromium-based browser.)")
-            self.skip("Please rerun this test using '--mobile!'!")
-        self.open("https://www.skype.com/en/")
-        self.assert_text("Install Skype", "div.appInfo")
-        self.highlight("div.appBannerContent")
-        self.highlight('[itemprop="url"]')
-        self.highlight("h1")
-        self.highlight_click('[title="Download Skype"]')
+            self.open_if_not_url("about:blank")
+            print("\n  This test is only for mobile-device web browsers!")
+            print('  (Use "--mobile" to run this test in Mobile Mode!)')
+            self.skip('Use "--mobile" to run this test in Mobile Mode!')
+        self.open("https://www.skype.com/en/get-skype/")
         self.assert_element('[aria-label="Microsoft"]')
         self.assert_text("Download Skype", "h1")
         self.highlight("div.appBannerContent")
@@ -29,7 +23,6 @@ class SkypeWebsiteTestClass(BaseCase):
         self.assert_text("Skype for Mobile", "h2")
         self.highlight("h2")
         self.highlight("#get-skype-0")
-        self.highlight_click('[title*="Select from list"]')
-        self.highlight('[data-bi-id*="android"]')
+        self.highlight_click("span[data-dropdown-icon]")
+        self.highlight("#get-skype-0_android-download")
         self.highlight('[data-bi-id*="ios"]')
-        self.highlight('[data-bi-id*="windows10"]')

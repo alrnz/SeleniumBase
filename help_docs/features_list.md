@@ -1,36 +1,60 @@
-[<img src="https://cdn2.hubspot.net/hubfs/100006/images/super_logo_i.png" title="SeleniumBase" height="48">](https://github.com/seleniumbase/SeleniumBase/blob/master/README.md)
+<!-- SeleniumBase Docs -->
 
-[<img src="http://img.youtube.com/vi/Sjzq9kU5kOw/0.jpg" title="SeleniumBase" height="180">](https://www.youtube.com/watch?v=Sjzq9kU5kOw)
-
-(**[Watch an overview on YouTube](https://www.youtube.com/watch?v=Sjzq9kU5kOw)**)
+<!-- YouTube View --><a href="https://www.youtube.com/watch?v=EablmOazy-k"><img src="http://img.youtube.com/vi/EablmOazy-k/0.jpg" title="SeleniumBase on YouTube" width="285" /></a>
+<!-- GitHub Only --><p>(<b><a href="https://www.youtube.com/watch?v=EablmOazy-k">Watch the new tutorial on YouTube</a></b>)</p>
 
 <a id="feature_list"></a>
-## <img src="https://cdn2.hubspot.net/hubfs/100006/images/super_square_logo_3a.png" title="SeleniumBase" height="32"> **Features:**
-* A complete test automation framework for building & running reliable testing scripts.
-* Uses [Pytest](https://docs.pytest.org/en/latest/) or [Nose](http://nose.readthedocs.io/en/latest/) runners for test discovery, organization, execution, and logging.
-* Includes [console scripts](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/console_scripts/ReadMe.md) that save you time by installing web drivers automatically, etc. 
-* Includes a [website tour builder](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/tour_examples/ReadMe.md) for creating and running walkthroughs on any website.
-* Works on multiple platforms such as macOS, Windows, Linux, and [Docker](https://github.com/seleniumbase/SeleniumBase/blob/master/integrations/docker/ReadMe.md).
-* Uses a [flexible command-line interface](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/customizing_test_runs.md) to customize & configure test runs.
-* Can run tests using multiple concurrent threads. (Use ``-n THREAD_COUNT``)
-* Has Python libraries for helping you do much more with Selenium/WebDriver.
-* Has [Plugins](https://github.com/seleniumbase/SeleniumBase/tree/master/seleniumbase/plugins) for logging data and screenshots automatically. ([Click to learn more](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/example_logs/ReadMe.md))
-* Uses a [global config file](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/config/settings.py) for configuring SeleniumBase to your specific needs.
-* Backwards-compatible with [WebDriver](http://www.seleniumhq.org/projects/webdriver/). (Use ``self.driver`` anywhere.)
-* Can run tests in Headless Mode to hide the web browser. (Use ``--headless``)
-* Can run tests through a proxy server. (Use ``--proxy=IP_ADDRESS:PORT``)
-* Can use an authenticated proxy server. (``--proxy=USERNAME:PASSWORD@IP_ADDRESS:PORT``)
-* Can change the web browser's user agent string. (Use ``--agent=USER_AGENT_STRING``)
-* Can run tests using Chrome's mobile device emulator (Use ``--mobile``)
-* Can set a Chrome User Data Directory / Profile to load. (Use ``--user_data_dir=DIR``)
-* Can load Chrome Extension ZIP files (comma-separated). (Use ``--extension_zip=ZIP``)
-* Can load Chrome Extension folders (comma-separated). (Use ``--extension_dir=DIR``)
-* Can handle Google Authenticator logins by using the [Python one-time password library](https://pyotp.readthedocs.io/en/latest/).
-* Includes a hybrid-automation solution called **[MasterQA](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/masterqa/ReadMe.md)** to speed up manual testing.
-* Integrates with [MySQL](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/core/testcase_manager.py), [Selenium Grid](https://github.com/seleniumbase/SeleniumBase/tree/master/seleniumbase/utilities/selenium_grid), [Azure](https://github.com/seleniumbase/SeleniumBase/blob/master/integrations/azure/jenkins/ReadMe.md), [Google Cloud](https://github.com/seleniumbase/SeleniumBase/tree/master/integrations/google_cloud/ReadMe.md), [Amazon S3](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/plugins/s3_logging_plugin.py), and [Docker](https://github.com/seleniumbase/SeleniumBase/blob/master/integrations/docker/ReadMe.md).
-* Has the ability to connect to a [BrowserStack](https://www.browserstack.com/automate#), [Sauce Labs](https://saucelabs.com/products/web-testing/cross-browser-testing), or [TestingBot](https://testingbot.com/features) Selenium Grid.
-* Includes a [tool to convert Selenium IDE recordings](https://github.com/seleniumbase/SeleniumBase/tree/master/seleniumbase/utilities/selenium_ide) into clean, robust SeleniumBase scripts.
+
+## [<img src="https://seleniumbase.github.io/img/logo6.png" title="SeleniumBase" width="32">](https://github.com/seleniumbase/SeleniumBase/) SeleniumBase Features: 🏰
+
+* A powerful Python framework for browser automation and E2E UI testing.
+* Includes [Recorder Mode](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/recorder_mode.md) for instantly generating browser tests in Python.
+* Supports multiple browsers, tabs, iframes, and proxies in the same test.
+* Includes [Test Case Management Software](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/case_plans.md) with Markdown technology.
+* Automatic smart-waiting improves reliability and prevents flaky tests.
+* Supports [pytest](https://docs.pytest.org/en/latest/), [unittest](https://docs.python.org/3/library/unittest.html), [nose](http://nose.readthedocs.io/en/latest/), and [behave](https://behave.readthedocs.io/en/stable/index.html) for finding/running tests.
+* All the code is open source. Look inside to learn about any feature.
+* Powerful logging tools for [dashboards, reports, and screenshots](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/example_logs/ReadMe.md).
+* Can run tests in Headless Mode to hide the browser. (``--headless``)
+* Can run tests multithreaded from parallel browsers. (``-n NUM_THREADS``)
+* Can run tests from a shared browser session. (``--reuse-session``/``--rs``)
+* Can run tests using [Chromium's mobile device emulator](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/mobile_testing.md). (``--mobile``)
+* Can run tests through a proxy server. (``--proxy=IP_ADDRESS:PORT``)
+* Can run tests with proxy settings via PAC URL. (``--proxy-pac-url=URL.pac``)
+* Can run tests through an authenticated proxy server. (``--proxy=USER:PASS@HOST:PORT``)
+* Can run tests with proxy+auth via PAC URL. (``--proxy-pac-url=USER:PASS@URL.pac``)
+* Can run tests with a customized browser user agent. (``--agent=USER_AGENT_STRING``)
+* Can set a Chromium User Data Directory/Profile to load. (``--user-data-dir=DIR``)
+* Can avoid detection by sites that try to block Selenium. (``--undetected``/``--uc``)
+* Can integrate with [selenium-wire](https://github.com/wkeeling/selenium-wire) for inspecting browser requests. (``--wire``)
+* Can load Chrome Extension ZIP files. (``--extension-zip=ZIP``)
+* Can load Chrome Extension folders. (``--extension-dir=DIR``)
+* Powerful [console scripts](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/console_scripts/ReadMe.md). (Type **``seleniumbase``** or **``sbase``** to use.)
+* Has the ability to translate tests into [multiple spoken languages](https://github.com/seleniumbase/SeleniumBase/tree/master/examples/translations).
+* Has a flexible [command-line interface](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/customizing_test_runs.md) for customizing test runs.
+* Has a [global config file](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/config/settings.py) for configuring settings as needed.
+* Includes a tool for [creating interactive web presentations](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/presenter/ReadMe.md).
+* Includes [Chart Maker](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/chart_maker/ReadMe.md), a tool for creating interactive charts.
+* Includes a [dialog box builder](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/dialog_boxes/ReadMe.md) to allow user-input during automation.
+* Includes a [website tour builder](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/tour_examples/ReadMe.md) for creating interactive walkthroughs.
+* Includes a GUI for running pytest scripts: [SeleniumBase Commander](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/commander.md).
+* Includes integrations for [GitHub Actions](https://seleniumbase.io/integrations/github/workflows/ReadMe/), [Google Cloud](https://github.com/seleniumbase/SeleniumBase/tree/master/integrations/google_cloud/ReadMe.md), [Azure](https://github.com/seleniumbase/SeleniumBase/blob/master/integrations/azure/jenkins/ReadMe.md), [S3](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/plugins/s3_logging_plugin.py), and [Docker](https://github.com/seleniumbase/SeleniumBase/blob/master/integrations/docker/ReadMe.md).
+* Can handle Google Authenticator logins with [Python's one-time password library](https://pyotp.readthedocs.io/en/latest/).
 * Can load and make assertions on PDF files from websites or the local file system.
-* Can reuse the same Selenium browser session between tests. (Use: ``--reuse-session``)
-* Written in Python, but can also make JavaScript calls. (Use: ``self.execute_script()``)
-* Includes useful Python decorators and password obfuscation methods. ([Learn more here](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/common/ReadMe.md))
+* Can inspect HTML to find issues and points of interest with the [HTML Inspector](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/html_inspector.md).
+* Is backwards-compatible with Python [WebDriver](https://www.selenium.dev/projects/) methods. (Use: ``self.driver``)
+* Can execute JavaScript code from Python calls. (Use: ``self.execute_script()``)
+* Can pierce through [Shadow DOM selectors](https://github.com/seleniumbase/SeleniumBase/blob/master/help_docs/shadow_dom.md). (Add ``::shadow`` to CSS fragments.)
+* Includes a hybrid-automation solution, [MasterQA](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/masterqa/ReadMe.md), to speed up manual testing.
+* Includes useful [Python decorators and password obfuscation methods](https://github.com/seleniumbase/SeleniumBase/blob/master/seleniumbase/common/ReadMe.md).
+
+--------
+
+<!-- YouTube View --><a href="https://www.youtube.com/watch?v=yEQeAU_mrg0"><img src="http://img.youtube.com/vi/yEQeAU_mrg0/0.jpg" title="SeleniumBase on YouTube" width="285" /></a>
+<!-- GitHub Only --><p>(<b><a href="https://www.youtube.com/watch?v=yEQeAU_mrg0">Have fun with test automation!</a></b>)</p>
+
+(<b><a href="https://www.youtube.com/watch?v=Sjzq9kU5kOw">Watch the old tutorial on YouTube</a></b>)
+
+<p align="left"><a href="https://github.com/seleniumbase/SeleniumBase/"><img src="https://seleniumbase.github.io/cdn/img/sb_logo_10.png" alt="SeleniumBase" title="SeleniumBase" width="200"></a></p>
+
+[<img src="https://seleniumbase.github.io/cdn/img/super_logo_sb.png" title="SeleniumBase" width="200">](https://seleniumbase.io/)

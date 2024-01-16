@@ -1,27 +1,19 @@
-"""
-Contains the screenshot plugin for the selenium tests.
-"""
-
+"""Screenshot Plugin for SeleniumBase tests that run with pynose / nosetests"""
 import os
 from nose.plugins import Plugin
 from seleniumbase.config import settings
 
 
 class ScreenShots(Plugin):
-    """
-    This plugin will take a screenshot when either a test fails
-    or raises an error. It will store that screenshot either in
-    the default logs file or in another file of the user's specification.
-    """
-
+    """This plugin takes a screenshot when a test fails."""
     name = "screen_shots"
     logfile_name = settings.SCREENSHOT_NAME
 
     def options(self, parser, env):
-        super(ScreenShots, self).options(parser, env=env)
+        super().options(parser, env=env)
 
     def configure(self, options, conf):
-        super(ScreenShots, self).configure(options, conf)
+        super().configure(options, conf)
         if not self.enabled:
             return
         self.options = options

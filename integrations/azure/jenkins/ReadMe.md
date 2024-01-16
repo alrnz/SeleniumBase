@@ -1,4 +1,6 @@
-### Building a browser-based test automation server with [Jenkins on Azure](https://azuremarketplace.microsoft.com/en-au/marketplace/apps/azure-oss.jenkins) by using [SeleniumBase](https://github.com/seleniumbase/SeleniumBase)
+### Building a browser-based test automation server with Jenkins on Azure by using SeleniumBase
+
+(**2022 NOTE:** Steps from [this 2019 tutorial from Boston Code Camp](https://www.bostoncodecamp.com/CC31/sessions/details/16741) are now **out-of-date**. For installing Jenkins from the Azure Marketplace, you can try using [Bitnami Jenkins](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/bitnami.jenkins). **Or**, for the newer official Microsoft tutorial, see [Get Started: Install Jenkins on an Azure Linux VM](https://docs.microsoft.com/en-us/azure/developer/jenkins/configure-on-linux-vm), and then continue with [Step 4](#step4) below to resume SeleniumBase setup after you've created your Jenkins instance.)
 
 ----------
 
@@ -6,38 +8,47 @@
 
 * **(You'll be using your own repository eventually.)**
 
-
 ### Step 1. Find Jenkins in the Azure Marketplace
 
 #### Search for ["Jenkins" in the Azure Marketplace](https://portal.azure.com/#blade/Microsoft_Azure_Marketplace/GalleryFeaturedMenuItemBlade/selectedMenuItemId/home/searchQuery/jenkins/resetMenuId/) and select the ``Jenkins (Publisher: Microsoft)`` result to get to the Jenkins Start page.
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_01.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_01.png "Jenkins on Azure")
 
+----------
 
 ### Step 2. Launch a Jenkins instance
 
 #### Click "Create" and follow the steps...
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_02.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_02.png "Jenkins on Azure")
+
+----------
 
 #### Continue to "Additional Settings" when you're done with "Basics".
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_03.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_03.png "Jenkins on Azure")
+
+----------
 
 #### On the "Additional Settings" section, set the Size to "B2s":
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_04.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_04.png "Jenkins on Azure")
+
+----------
 
 #### Once you've reached Step 5, click "Create" to complete the setup.
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_05.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_05.png "Jenkins on Azure")
 
+----------
 
 ### Step 3. Inspect your new Jenkins instance to SSH into the new machine
 
 #### Once your new Jenkins instance has finished launching, you should be able to see the main page:
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_06.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_06.png "Jenkins on Azure")
+
+----------
 
 #### On the main page, you should be able to find the Public IP Address.
 * **Use that IP Address to SSH into the machine:**
@@ -46,8 +57,11 @@
 ssh USERNAME@IP_ADDRESS
 ```
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_07.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_07.png "Jenkins on Azure")
 
+----------
+
+<a id="step4"></a>
 
 ### Step 4. Clone the SeleniumBase repository from the root ("/") directory.
 
@@ -55,7 +69,6 @@ ssh USERNAME@IP_ADDRESS
 cd /
 sudo git clone https://github.com/seleniumbase/SeleniumBase.git
 ```
-
 
 ### Step 5. Enter the "linux" folder
 
@@ -114,7 +127,9 @@ sudo seleniumbase install chromedriver
 
 ### Step 14. Run an [example test](https://github.com/seleniumbase/SeleniumBase/blob/master/examples/my_first_test.py) in Chrome to verify installation (May take up to 10 seconds)
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_08.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_08.png "Jenkins on Azure")
+
+----------
 
 ```bash
 pytest examples/my_first_test.py --headless --browser=chrome
@@ -126,7 +141,9 @@ pytest examples/my_first_test.py --headless --browser=chrome
 
 (Depending on your version of Jenkins, you may see the following screen, or nothing at all.)
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_09.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_09.png "Jenkins on Azure")
+
+----------
 
 #### Initially, Jenkins uses only ``http``, which makes it less secure.
 
@@ -136,12 +153,13 @@ pytest examples/my_first_test.py --headless --browser=chrome
 
 ``ssh -L 127.0.0.1:8080:localhost:8080 USERNAME@DNS_NAME``
 
-
 ### Step 16. Login to Jenkins
 
 #### If you've correctly set up SSH Port Forwarding, the url will be ``http://127.0.0.1:8080/``
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_10.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_10.png "Jenkins on Azure")
+
+----------
 
 #### You'll need to get the password from the SSH terminal on the Linux machine to log in:
 
@@ -149,20 +167,23 @@ pytest examples/my_first_test.py --headless --browser=chrome
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
 
-
 ### Step 17. Customize Jenkins
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_11.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_11.png "Jenkins on Azure")
 
+----------
 
 ### Step 18. Create an Admin user
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_12.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_12.png "Jenkins on Azure")
+
+----------
 
 #### Once Jenkins has finished loading, the top left of the page should look like this:
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_13.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_13.png "Jenkins on Azure")
 
+----------
 
 ### Step 19. Create a new Jenkins job
 
@@ -171,45 +192,54 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 * **Select "Freestyle project"**
 * **Click "OK"**
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_14.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_14.png "Jenkins on Azure")
 
+----------
 
 ### Step 20. Setup your new Jenkins job
 
 * **Under "Source Code Management", select "Git".**
 * **For the "Repository URL", put: ``https://github.com/seleniumbase/SeleniumBase.git``. (You'll eventually be using your own clone of the repository here.)**
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_15.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_15.png "Jenkins on Azure")
+
+----------
 
 * **Under "Build", click the "Add build step" dropdown.**
 * **Select "Execute shell".**
 * **For the "Command", paste:**
+
 ```bash
 cd examples
 pytest my_first_test.py --headless
 ```
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_16.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_16.png "Jenkins on Azure")
+
+----------
 
 #### Click "Save" when you're done.
 
 * **You'll see the following page after that:**
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_18.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_18.png "Jenkins on Azure")
 
+----------
 
 ### Step 21. Run your new Jenkins job
 
 * **Click on "Build Now"**
 * **(If everything was done correctly, you'll see a blue dot appear after a few seconds, indicating that the test job passed.)**
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_19.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_19.png "Jenkins on Azure")
 
+----------
 
 ### Step 22. See the top Jenkins page for an overview of all jobs
 
-![](https://cdn2.hubspot.net/hubfs/100006/images/jenkins_on_azure_17.png "Jenkins on Azure")
+![](https://seleniumbase.github.io/cdn/img/azure/jenkins_on_azure_17.png "Jenkins on Azure")
 
+----------
 
 ### Step 23. Future Work
 

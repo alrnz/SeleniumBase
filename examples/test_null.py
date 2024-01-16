@@ -1,7 +1,7 @@
 from seleniumbase import BaseCase
+BaseCase.main(__name__, __file__)
 
 
-class MyTestClass(BaseCase):
-
+class NullTests(BaseCase):
     def test_null(self):
         pass

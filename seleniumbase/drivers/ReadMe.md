@@ -1,19 +1,27 @@
-### <img src="https://cdn2.hubspot.net/hubfs/100006/images/super_square_logo_3a.png" title="SeleniumBase" height="32"> SeleniumBase webdriver storage
+### <img src="https://seleniumbase.github.io/img/logo6.png" title="SeleniumBase" width="32" /> SeleniumBase webdriver storage
 
-* You need a different webdriver for each web browser you want to run automation on: ``chromedriver`` for Chrome, ``edgedriver`` for Edge, ``geckodriver`` for Firefox, ``operadriver`` for Opera, and ``iedriver`` for Internet Explorer.
+To run web automation, you'll need webdrivers for each browser you plan on using.  With SeleniumBase, drivers are downloaded automatically as needed into the SeleniumBase ``drivers`` folder.
 
-```
-seleniumbase install chromedriver
-seleniumbase install geckodriver
-seleniumbase install edgedriver
-seleniumbase install iedriver
-seleniumbase install operadriver
-```
-After running the commands above, web drivers will get downloaded into this folder. SeleniumBase will then use those drivers during test runs if present. (The drivers don't come with SeleniumBase by default.)
+You can also download drivers manually with these commands:
 
-* If you have the latest version of Chrome installed, get the latest chromedriver (<i>otherwise it defaults to chromedriver 2.44 for compatibility reasons</i>):
 ```bash
-seleniumbase install chromedriver latest
+seleniumbase get chromedriver
+seleniumbase get geckodriver
+seleniumbase get edgedriver
 ```
+
+After running the commands above, web drivers will get downloaded into the ``seleniumbase/drivers/`` folder. SeleniumBase uses those drivers during tests. (The drivers don't come with SeleniumBase by default.)
 
 If the necessary driver is not found in this location while running tests, SeleniumBase will instead look for the driver on the System PATH. If the necessary driver is not on the System PATH either, SeleniumBase will automatically attempt to download the required driver.
+
+* You can also download specific versions of drivers. Examples:
+
+```bash
+sbase get chromedriver 107
+sbase get chromedriver 107.0.5304.62
+sbase get chromedriver latest
+sbase get chromedriver latest-1
+sbase get edgedriver 106.0.1370.42
+```
+
+(NOTE: ``sbase`` is a shortcut for ``seleniumbase``)

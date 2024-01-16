@@ -1,17 +1,15 @@
-
-
 # "sb" pytest fixture test in a method with no class
 def test_sb_fixture_with_no_class(sb):
-    sb.open("https://google.com/ncr")
-    sb.update_text('input[title="Search"]', 'SeleniumBase\n')
-    sb.click('a[href*="github.com/seleniumbase/SeleniumBase"]')
-    sb.click('a[title="seleniumbase"]')
+    sb.open("seleniumbase.io/help_docs/install/")
+    sb.type('input[aria-label="Search"]', "GUI Commander")
+    sb.click('mark:contains("Commander")')
+    sb.assert_title_contains("GUI / Commander")
 
 
 # "sb" pytest fixture test in a method inside a class
-class Test_SB_Fixture():
+class Test_SB_Fixture:
     def test_sb_fixture_inside_class(self, sb):
-        sb.open("https://google.com/ncr")
-        sb.update_text('input[title="Search"]', 'SeleniumBase\n')
-        sb.click('a[href*="github.com/seleniumbase/SeleniumBase"]')
-        sb.click('a[title="examples"]')
+        sb.open("seleniumbase.io/help_docs/install/")
+        sb.type('input[aria-label="Search"]', "GUI Commander")
+        sb.click('mark:contains("Commander")')
+        sb.assert_title_contains("GUI / Commander")

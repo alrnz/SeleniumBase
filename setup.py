@@ -1,64 +1,104 @@
-"""
-The setup package to install SeleniumBase dependencies and plugins
-(Uses selenium 3.x and is compatible with Python 2.7+ and Python 3.5+)
-"""
-
-from setuptools import setup, find_packages  # noqa
+"""Setup steps for installing SeleniumBase dependencies and plugins.
+(Uses selenium 4.x and is compatible with Python 3.7+)"""
+from setuptools import setup, find_packages  # noqa: F401
 import os
 import sys
 
 
-this_directory = os.path.abspath(os.path.dirname(__file__))
+this_dir = os.path.abspath(os.path.dirname(__file__))
 long_description = None
+total_description = None
 try:
-    with open(os.path.join(this_directory, 'README.md'), 'rb') as f:
-        long_description = f.read().decode('utf-8')
+    with open(os.path.join(this_dir, "README.md"), "rb") as f:
+        total_description = f.read().decode("utf-8")
+    description_lines = total_description.split("\n")
+    long_description_lines = []
+    for line in description_lines:
+        if not line.startswith("<meta ") and not line.startswith("<link "):
+            long_description_lines.append(line)
+    long_description = "\n".join(long_description_lines)
 except IOError:
-    long_description = 'Reliable Browser Automation & Testing Framework'
+    long_description = "A complete library for building end-to-end tests."
+about = {}
+# Get the package version from the seleniumbase/__version__.py file
+with open(os.path.join(this_dir, "seleniumbase", "__version__.py"), "rb") as f:
+    exec(f.read().decode("utf-8"), about)
 
-if sys.argv[-1] == 'publish':
+if sys.argv[-1] == "publish":
     reply = None
     input_method = input
-    if not sys.version_info[0] >= 3:
-        input_method = raw_input  # noqa
-    reply = str(input_method(
-        '>>> Confirm release PUBLISH to PyPI? (yes/no): ')).lower().strip()
-    if reply == 'yes':
+    confirm_text = ">>> Confirm release PUBLISH to PyPI? (yes/no): "
+    reply = str(input_method(confirm_text)).lower().strip()
+    if reply == "yes":
+        if sys.version_info < (3, 9):
+            print("\nERROR! Publishing to PyPI requires Python>=3.9")
+            sys.exit()
         print("\n*** Checking code health with flake8:\n")
-        flake8_status = os.system("flake8 --exclude=temp")
+        os.system("python -m pip install 'flake8==6.1.0'")
+        flake8_status = os.system("flake8 --exclude=recordings,temp")
         if flake8_status != 0:
-            print("\nWARNING! Fix flake8 issues before publishing to PyPI!\n")
+            print("\nERROR! Fix flake8 issues before publishing to PyPI!\n")
             sys.exit()
         else:
             print("*** No flake8 issues detected. Continuing...")
-        print("\n*** Rebuilding distribution packages: ***\n")
-        os.system('rm -f dist/*.egg; rm -f dist/*.tar.gz; rm -f dist/*.whl')
-        os.system('python setup.py sdist bdist_wheel')  # Create new tar/wheel
+        print("\n*** Removing existing distribution packages: ***\n")
+        os.system("rm -f dist/*.egg; rm -f dist/*.tar.gz; rm -f dist/*.whl")
+        os.system("rm -rf build/bdist.*; rm -rf build/lib")
+        print("\n*** Installing build: *** (Required for PyPI uploads)\n")
+        os.system("python -m pip install --upgrade 'build'")
+        print("\n*** Installing pkginfo: *** (Required for PyPI uploads)\n")
+        os.system("python -m pip install --upgrade 'pkginfo'")
+        print("\n*** Installing readme-renderer: *** (For PyPI uploads)\n")
+        os.system("python -m pip install --upgrade 'readme-renderer'")
+        print("\n*** Installing jaraco.classes: *** (For PyPI uploads)\n")
+        os.system("python -m pip install --upgrade 'jaraco.classes'")
+        print("\n*** Installing more-itertools: *** (For PyPI uploads)\n")
+        os.system("python -m pip install --upgrade 'more-itertools'")
+        print("\n*** Installing zipp: *** (Required for PyPI uploads)\n")
+        os.system("python -m pip install --upgrade 'zipp'")
+        print("\n*** Installing importlib-metadata: *** (For PyPI uploads)\n")
+        os.system("python -m pip install --upgrade 'importlib-metadata'")
+        print("\n*** Installing keyring, requests-toolbelt: *** (For PyPI)\n")
+        os.system("python -m pip install --upgrade keyring requests-toolbelt")
         print("\n*** Installing twine: *** (Required for PyPI uploads)\n")
-        os.system("python -m pip install 'twine>=1.15.0'")
-        print("\n*** Installing tqdm: *** (Required for PyPI uploads)\n")
-        os.system("python -m pip install 'tqdm>=4.46.0'")
+        os.system("python -m pip install --upgrade 'twine'")
+        print("\n*** Rebuilding distribution packages: ***\n")
+        os.system("python -m build")  # Create new tar/wheel
         print("\n*** Publishing The Release to PyPI: ***\n")
-        os.system('python -m twine upload dist/*')  # Requires ~/.pypirc Keys
+        os.system("python -m twine upload dist/*")  # Requires ~/.pypirc Keys
         print("\n*** The Release was PUBLISHED SUCCESSFULLY to PyPI! :) ***\n")
     else:
         print("\n>>> The Release was NOT PUBLISHED to PyPI! <<<\n")
     sys.exit()
 
 setup(
-    name='seleniumbase',
-    version='1.37.14',
-    description='Fast, Easy, and Reliable Browser Automation & Testing.',
+    name="seleniumbase",
+    version=about["__version__"],
+    description="A complete web automation framework for end-to-end testing.",
     long_description=long_description,
-    long_description_content_type='text/markdown',
-    url='https://github.com/seleniumbase/SeleniumBase',
+    long_description_content_type="text/markdown",
+    url="https://github.com/seleniumbase/SeleniumBase",
+    project_urls={
+        "Changelog": "https://github.com/seleniumbase/SeleniumBase/releases",
+        "Download": "https://pypi.org/project/seleniumbase/#files",
+        "Gitter": "https://gitter.im/seleniumbase/SeleniumBase",
+        "Blog": "https://seleniumbase.com/",
+        "PyPI": "https://pypi.org/project/seleniumbase/",
+        "Source": "https://github.com/seleniumbase/SeleniumBase",
+        "Documentation": "https://seleniumbase.io/",
+    },
     platforms=["Windows", "Linux", "Mac OS-X"],
-    author='Michael Mintz',
-    author_email='mdmintz@gmail.com',
-    maintainer='Michael Mintz',
+    author="Michael Mintz",
+    author_email="mdmintz@gmail.com",
+    maintainer="Michael Mintz",
     license="MIT",
+    keywords="pytest automation selenium browser testing webdriver sbase",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Environment :: MacOS X",
+        "Environment :: Win32 (MS Windows)",
+        "Environment :: Web Environment",
         "Framework :: Pytest",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
@@ -67,103 +107,206 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Internet",
+        "Topic :: Internet :: WWW/HTTP :: Browsers",
         "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Scientific/Engineering :: Image Processing",
+        "Topic :: Scientific/Engineering :: Visualization",
         "Topic :: Software Development",
         "Topic :: Software Development :: Quality Assurance",
+        "Topic :: Software Development :: Code Generators",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Testing",
         "Topic :: Software Development :: Testing :: Acceptance",
         "Topic :: Software Development :: Testing :: Traffic Generation",
         "Topic :: Utilities",
     ],
+    python_requires=">=3.7",
     install_requires=[
-        'pip>=20.1',
-        'setuptools',
-        'setuptools-scm',
-        'wheel',
-        'six',
-        'nose',
-        'ipdb',
-        'idna==2.9',  # Must stay in sync with "requests"
-        'chardet==3.0.4',  # Must stay in sync with "requests"
-        'urllib3==1.25.9',  # Must stay in sync with "requests"
-        'requests==2.23.0',
-        'selenium==3.141.0',
-        'pluggy==0.13.1',
-        'attrs>=19.3.0',
-        'pytest==4.6.9;python_version<"3.5"',
-        'pytest==5.3.5;python_version>="3.5"',
-        'pytest-cov==2.8.1',
-        'pytest-forked==1.1.3',
-        'pytest-html==1.22.1;python_version<"3.6"',
-        'pytest-html==2.0.1;python_version>="3.6"',
-        'pytest-metadata==1.8.0',
-        'pytest-ordering==0.6',
-        'pytest-rerunfailures==8.0;python_version<"3.6"',
-        'pytest-rerunfailures==9.0;python_version>="3.6"',
-        'pytest-xdist==1.32.0',
-        'parameterized==0.7.4',
-        'soupsieve==1.9.5;python_version<"3.5"',
-        'soupsieve==2.0;python_version>="3.5"',
-        'beautifulsoup4==4.9.0',
-        'cryptography==2.9.2',
-        'pyopenssl==19.1.0',
-        'pygments==2.5.2;python_version<"3.5"',
-        'pygments==2.6.1;python_version>="3.5"',
-        'packaging>=20.3',
-        'colorama==0.4.3',
-        'brython==3.8.8',
-        'pymysql==0.9.3',
-        'coverage==5.1',
-        'pyotp==2.3.0',
-        'boto==2.49.0',
-        'cffi==1.14.0',
-        'flake8==3.7.9',
-        'pyflakes==2.1.1',
-        'certifi>=2020.4.5.1',
-        'pdfminer.six==20191110;python_version<"3.5"',
-        'pdfminer.six==20200402;python_version>="3.5"',
+        'pip>=23.3.2',
+        'packaging>=23.2',
+        'setuptools>=68.0.0;python_version<"3.8"',
+        'setuptools>=69.0.3;python_version>="3.8"',
+        'wheel>=0.42.0',
+        'attrs>=23.2.0',
+        "certifi>=2023.11.17",
+        'filelock>=3.12.2;python_version<"3.8"',
+        'filelock>=3.13.1;python_version>="3.8"',
+        'platformdirs>=4.0.0;python_version<"3.8"',
+        'platformdirs>=4.1.0;python_version>="3.8"',
+        'parse>=1.20.0',
+        'parse-type>=0.6.2',
+        'pyyaml>=6.0.1',
+        "six==1.16.0",
+        "idna==3.6",
+        'chardet==5.2.0',
+        'charset-normalizer==3.3.2',
+        'urllib3>=1.26.18,<2;python_version<"3.10"',
+        'urllib3>=1.26.18,<2.2.0;python_version>="3.10"',
+        'requests==2.31.0',
+        "pynose==1.4.8",
+        'sniffio==1.3.0',
+        'h11==0.14.0',
+        'outcome==1.3.0.post0',
+        'trio==0.22.2;python_version<"3.8"',
+        'trio==0.23.2;python_version>="3.8"',
+        'trio-websocket==0.11.1',
+        'wsproto==1.2.0',
+        'selenium==4.11.2;python_version<"3.8"',
+        'selenium==4.16.0;python_version>="3.8"',
+        'cssselect==1.2.0',
+        "sortedcontainers==2.4.0",
+        'fasteners==0.19',
+        'execnet==2.0.2',
+        'iniconfig==2.0.0',
+        'pluggy==1.2.0;python_version<"3.8"',
+        'pluggy==1.3.0;python_version>="3.8"',
+        "py==1.11.0",
+        'pytest==7.4.4',
+        "pytest-html==2.0.1",  # Newer ones had issues
+        'pytest-metadata==3.0.0',
+        "pytest-ordering==0.6",
+        'pytest-rerunfailures==13.0',
+        'pytest-xdist==3.5.0',
+        'parameterized==0.9.0',
+        "sbvirtualdisplay==1.3.0",
+        "behave==1.2.6",
+        'soupsieve==2.4.1;python_version<"3.8"',
+        'soupsieve==2.5;python_version>="3.8"',
+        "beautifulsoup4==4.12.2",
+        'pygments==2.17.2',
+        'pyreadline3==3.4.1;platform_system=="Windows"',
+        "tabcompleter==1.3.0",
+        "pdbp==1.5.0",
+        'colorama==0.4.6',
+        'exceptiongroup==1.2.0',
+        'pyotp==2.9.0',
+        'markdown-it-py==2.2.0;python_version<"3.8"',
+        'markdown-it-py==3.0.0;python_version>="3.8"',
+        'mdurl==0.1.2',
+        'rich==13.7.0',
     ],
+    extras_require={
+        # pip install -e .[allure]
+        # Usage: pytest --alluredir=allure_results
+        # Serve: allure serve allure_results
+        "allure": [
+            'allure-pytest==2.13.2',
+            'allure-python-commons==2.13.2',
+            'allure-behave==2.13.2',
+        ],
+        # pip install -e .[coverage]
+        # Usage: coverage run -m pytest; coverage html; coverage report
+        "coverage": [
+            'coverage==7.2.7;python_version<"3.8"',
+            'coverage==7.4.0;python_version>="3.8"',
+            'pytest-cov==4.1.0',
+        ],
+        # pip install -e .[flake8]
+        # Usage: flake8
+        "flake8": [
+            'flake8==5.0.4;python_version<"3.9"',
+            'flake8==6.1.0;python_version>="3.9"',
+            "mccabe==0.7.0",
+            'pyflakes==2.5.0;python_version<"3.9"',
+            'pyflakes==3.1.0;python_version>="3.9"',
+            'pycodestyle==2.9.1;python_version<"3.9"',
+            'pycodestyle==2.11.1;python_version>="3.9"',
+        ],
+        # pip install -e .[ipdb]
+        # (Not needed for debugging anymore. SeleniumBase now includes "pdbp".)
+        "ipdb": [
+            "ipdb==0.13.13",
+            'ipython==7.34.0',
+        ],
+        # pip install -e .[pdfminer]
+        # (An optional library for parsing PDF files.)
+        "pdfminer": [
+            'pdfminer.six==20221105;python_version<"3.8"',
+            'pdfminer.six==20231228;python_version>="3.8"',
+            'cryptography==39.0.2;python_version<"3.9"',
+            'cryptography==41.0.7;python_version>="3.9"',
+            'cffi==1.15.1;python_version<"3.8"',
+            'cffi==1.16.0;python_version>="3.8"',
+            "pycparser==2.21",
+
+        ],
+        # pip install -e .[pillow]
+        # (An optional library for image-processing.)
+        "pillow": [
+            'Pillow==9.5.0;python_version<"3.8"',
+            'Pillow==10.2.0;python_version>="3.8"',
+        ],
+        # pip install -e .[psutil]
+        "psutil": [
+            "psutil==5.9.6",
+        ],
+        # pip install -e .[selenium-stealth]
+        "selenium-stealth": [
+            'selenium-stealth==1.0.6',
+        ],
+        # pip install -e .[selenium-wire]
+        "selenium-wire": [
+            'selenium-wire==5.1.0',
+            'Brotli==1.1.0',
+            'blinker==1.7.0',
+            'h2==4.1.0',
+            'hpack==4.0.0',
+            'hyperframe==6.0.1',
+            'kaitaistruct==0.10',
+            'pyasn1==0.5.1',
+            'zstandard==0.22.0',
+        ],
+    },
     packages=[
-        'seleniumbase',
-        'seleniumbase.common',
-        'seleniumbase.config',
-        'seleniumbase.console_scripts',
-        'seleniumbase.core',
-        'seleniumbase.drivers',
-        'seleniumbase.extensions',
-        'seleniumbase.fixtures',
-        'seleniumbase.masterqa',
-        'seleniumbase.plugins',
-        'seleniumbase.translate',
-        'seleniumbase.utilities',
-        'seleniumbase.utilities.selenium_grid',
-        'seleniumbase.utilities.selenium_ide',
-        'seleniumbase.virtual_display',
+        "seleniumbase",
+        "sbase",
+        "seleniumbase.behave",
+        "seleniumbase.common",
+        "seleniumbase.config",
+        "seleniumbase.console_scripts",
+        "seleniumbase.core",
+        "seleniumbase.drivers",
+        "seleniumbase.extensions",
+        "seleniumbase.fixtures",
+        "seleniumbase.js_code",
+        "seleniumbase.masterqa",
+        "seleniumbase.plugins",
+        "seleniumbase.resources",
+        "seleniumbase.translate",
+        "seleniumbase.undetected",
+        "seleniumbase.utilities",
+        "seleniumbase.utilities.selenium_grid",
+        "seleniumbase.utilities.selenium_ide",
     ],
     include_package_data=True,
     entry_points={
-        'console_scripts': [
-            'seleniumbase = seleniumbase.console_scripts.run:main',
+        "console_scripts": [
+            "seleniumbase = seleniumbase.console_scripts.run:main",
+            "sbase = seleniumbase.console_scripts.run:main",  # Simplified name
         ],
-        'nose.plugins': [
-            'base_plugin = seleniumbase.plugins.base_plugin:Base',
-            'selenium = seleniumbase.plugins.selenium_plugin:SeleniumBrowser',
-            'page_source = seleniumbase.plugins.page_source:PageSource',
-            'screen_shots = seleniumbase.plugins.screen_shots:ScreenShots',
-            'test_info = seleniumbase.plugins.basic_test_info:BasicTestInfo',
-            ('db_reporting = '
-             'seleniumbase.plugins.db_reporting_plugin:DBReporting'),
-            's3_logging = seleniumbase.plugins.s3_logging_plugin:S3Logging',
+        "nose.plugins": [
+            "base_plugin = seleniumbase.plugins.base_plugin:Base",
+            "selenium = seleniumbase.plugins.selenium_plugin:SeleniumBrowser",
+            "page_source = seleniumbase.plugins.page_source:PageSource",
+            "screen_shots = seleniumbase.plugins.screen_shots:ScreenShots",
+            "test_info = seleniumbase.plugins.basic_test_info:BasicTestInfo",
+            (
+                "db_reporting = "
+                "seleniumbase.plugins.db_reporting_plugin:DBReporting"
+            ),
+            "s3_logging = seleniumbase.plugins.s3_logging_plugin:S3Logging",
         ],
-        'pytest11': ['seleniumbase = seleniumbase.plugins.pytest_plugin']
-    }
+        "pytest11": ["seleniumbase = seleniumbase.plugins.pytest_plugin"],
+    },
 )
 
 # print(os.system("cat seleniumbase.egg-info/PKG-INFO"))

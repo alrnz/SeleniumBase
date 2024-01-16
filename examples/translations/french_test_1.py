@@ -1,22 +1,22 @@
 # French Language Test
 from seleniumbase.translate.french import CasDeBase
+CasDeBase.main(__name__, __file__)
 
 
 class MaClasseDeTest(CasDeBase):
-
     def test_exemple_1(self):
-        self.ouvrir_url("https://fr.wikipedia.org/wiki/")
-        self.vérifier_le_texte("Wikipédia")  # noqa
-        self.vérifier_un_élément('[title="Visiter la page d’accueil"]')
-        self.modifier_le_texte("#searchInput", "Crème brûlée")
-        self.cliquez_sur("#searchButton")
-        self.vérifier_le_texte("Crème brûlée", "#firstHeading")
-        self.vérifier_un_élément('img[alt*="Crème brûlée"]')
-        self.modifier_le_texte("#searchInput", "Jardin des Tuileries")
-        self.cliquez_sur("#searchButton")
-        self.vérifier_le_texte("Jardin des Tuileries", "#firstHeading")
-        self.vérifier_un_élément('img[alt*="Jardin des Tuileries"]')
+        self.ouvrir("https://fr.wikipedia.org/wiki/")
+        self.vérifier_texte("Wikipédia")
+        self.vérifier_élément('[alt="Wikipédia"]')
+        self.js_taper("#searchform input", "Crème brûlée")
+        self.cliquer("#searchform button")
+        self.vérifier_texte("Crème brûlée", "#firstHeading")
+        self.vérifier_élément('img[alt*="Crème brûlée"]')
+        self.js_taper("#searchform input", "Jardin des Tuileries")
+        self.cliquer("#searchform button")
+        self.vérifier_texte("Jardin des Tuileries", "#firstHeading")
+        self.vérifier_élément('img[alt*="Jardin des Tuileries"]')
         self.retour()
-        self.vérifier_la_vérité("brûlée" in self.obtenir_url_actuelle())
+        self.vérifier_url_contient("brûlée")
         self.en_avant()
-        self.vérifier_la_vérité("Jardin" in self.obtenir_url_actuelle())
+        self.vérifier_url_contient("Jardin")

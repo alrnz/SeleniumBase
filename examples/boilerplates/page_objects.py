@@ -1,8 +1,6 @@
-'''
-Example of using the Page Object Pattern for tests, using CSS selectors.
-Helps make your code more Readable, Maintainable, and Reusable.
-Import a file like this at the top of your test files.
-'''
+"""Example of using the Page Object Pattern in tests.
+Makes code more Readable, Maintainable, and Reusable.
+Import files like this at the top of your test files."""
 
 
 class Page(object):
@@ -28,7 +26,7 @@ class CheckoutPage(object):
     shop_more = "#shop-more"
 
 
-'''
+"""
 # Now you can do something like this in your test files:
 
 from .base_test_case import BaseTestCase
@@ -44,4 +42,4 @@ class MyTests(BaseTestCase):
         self.click(CheckoutPage.buy_now)
         self.assert_element("#success")
         self.assert_text("Order Received!", "#h2")
-'''
+"""

@@ -1,23 +1,25 @@
 # Portuguese Language Test
 from seleniumbase.translate.portuguese import CasoDeTeste
+CasoDeTeste.main(__name__, __file__)
 
 
 class MinhaClasseDeTeste(CasoDeTeste):
-
     def test_exemplo_1(self):
-        self.abrir_url("https://pt.wikipedia.org/wiki/")
+        self.abrir("https://pt.wikipedia.org/wiki/")
         self.verificar_texto("Wikipédia")
         self.verificar_elemento('[title="Língua portuguesa"]')
-        self.atualizar_texto("#searchInput", "João Pessoa")
-        self.clique("#searchButton")
+        self.digitar("#searchform input", "João Pessoa")
+        self.clique("#searchform button")
         self.verificar_texto("João Pessoa", "#firstHeading")
         self.verificar_elemento('img[alt*="João Pessoa"]')
-        self.atualizar_texto("#searchInput", "Florianópolis")
-        self.clique("#searchButton")
+        self.digitar("#searchform input", "Florianópolis")
+        self.clique("#searchform button")
         self.verificar_texto("Florianópolis", "h1#firstHeading")
-        self.verificar_elemento('img[alt*="Avenida Beira Mar"]')
+        self.verificar_elemento('td:contains("Avenida Beira-Mar")')
         self.voltar()
-        self.verificar_verdade("João" in self.obter_url_atual())
-        self.atualizar_texto("#searchInput", "Moqueca\n")
-        self.verificar_texto("Moqueca", "#firstHeading")
-        self.verificar_texto_do_link("Culinária do Brasil")
+        self.verificar_url_contém("João_Pessoa")
+        self.atualizar_a_página()
+        self.js_digitar("#searchform input", "Teatro Amazonas")
+        self.clique("#searchform button")
+        self.verificar_texto("Teatro Amazonas", "#firstHeading")
+        self.verificar_texto_do_link("Festival Amazonas de Ópera")
